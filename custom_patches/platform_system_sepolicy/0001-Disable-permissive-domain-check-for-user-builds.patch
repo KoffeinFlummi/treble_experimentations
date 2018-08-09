@@ -1,0 +1,37 @@
+From c84290970ec57c3be51f39d77a823de30b34ed7e Mon Sep 17 00:00:00 2001
+From: KoffeinFlummi <koffeinflummi@gmail.com>
+Date: Sat, 28 Jul 2018 13:22:52 +0200
+Subject: [PATCH] Disable permissive domain check for user builds
+
+---
+ Android.mk | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/Android.mk b/Android.mk
+index e5b244b5..e78ec65a 100644
+--- a/Android.mk
++++ b/Android.mk
+@@ -509,13 +509,13 @@ $(LOCAL_BUILT_MODULE): $(HOST_OUT_EXECUTABLES)/secilc $(HOST_OUT_EXECUTABLES)/se
+ 	@mkdir -p $(dir $@)
+ 	$(hide) $< -M true -G -c $(POLICYVERS) $(PRIVATE_CIL_FILES) -o $@.tmp -f /dev/null
+ 	$(hide) $(HOST_OUT_EXECUTABLES)/sepolicy-analyze $@.tmp permissive > $@.permissivedomains
+-	$(hide) if [ "$(TARGET_BUILD_VARIANT)" = "user" -a -s $@.permissivedomains ]; then \
+-		echo "==========" 1>&2; \
+-		echo "ERROR: permissive domains not allowed in user builds" 1>&2; \
+-		echo "List of invalid domains:" 1>&2; \
+-		cat $@.permissivedomains 1>&2; \
+-		exit 1; \
+-		fi
++	#$(hide) if [ "$(TARGET_BUILD_VARIANT)" = "user" -a -s $@.permissivedomains ]; then \
++	#	echo "==========" 1>&2; \
++	#	echo "ERROR: permissive domains not allowed in user builds" 1>&2; \
++	#	echo "List of invalid domains:" 1>&2; \
++	#	cat $@.permissivedomains 1>&2; \
++	#	exit 1; \
++	#	fi
+ 	$(hide) mv $@.tmp $@
+ 
+ built_sepolicy := $(LOCAL_BUILT_MODULE)
+-- 
+2.18.0
+

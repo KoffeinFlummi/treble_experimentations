@@ -1,0 +1,25 @@
+From f325d90527c4bc910123d5612f6cd64a1bfb3719 Mon Sep 17 00:00:00 2001
+From: KoffeinFlummi <koffeinflummi@gmail.com>
+Date: Sat, 21 Jul 2018 19:39:57 +0200
+Subject: [PATCH 3/6] Enable Night Light
+
+---
+ core/res/res/values/config.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/core/res/res/values/config.xml b/core/res/res/values/config.xml
+index 0abd4351562..ec9b2baa92c 100644
+--- a/core/res/res/values/config.xml
++++ b/core/res/res/values/config.xml
+@@ -870,7 +870,7 @@
+              1 - AUTO_MODE_CUSTOM
+              2 - AUTO_MODE_TWILIGHT
+     -->
+-    <integer name="config_defaultNightDisplayAutoMode">0</integer>
++    <integer name="config_defaultNightDisplayAutoMode">2</integer>
+ 
+     <!-- Default time when Night display is automatically activated.
+          Represented as milliseconds from midnight (e.g. 79200000 == 10pm). -->
+-- 
+2.18.0
+

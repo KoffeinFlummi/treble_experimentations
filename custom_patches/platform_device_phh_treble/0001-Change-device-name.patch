@@ -1,0 +1,25 @@
+From b54831a647cade99afa9de3e5266d105bec30b27 Mon Sep 17 00:00:00 2001
+From: KoffeinFlummi <koffeinflummi@gmail.com>
+Date: Sat, 28 Jul 2018 13:08:27 +0200
+Subject: [PATCH 1/2] Change device name
+
+---
+ generate.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/generate.sh b/generate.sh
+index ec0d882..67903f2 100644
+--- a/generate.sh
++++ b/generate.sh
+@@ -64,7 +64,7 @@ $rom_script
+ PRODUCT_NAME := $target
+ PRODUCT_DEVICE := phhgsi_${arch}_$part
+ PRODUCT_BRAND := Android
+-PRODUCT_MODEL := Phh-Treble $apps_name
++PRODUCT_MODEL := Nokia 6.1
+ 
+ PRODUCT_PACKAGES += $extra_packages
+ EOF
+-- 
+2.18.0
+

@@ -1,0 +1,26 @@
+From d8147d10d05244967a6c7b0ac550ec2786306c83 Mon Sep 17 00:00:00 2001
+From: KoffeinFlummi <koffeinflummi@gmail.com>
+Date: Sat, 28 Jul 2018 13:16:02 +0200
+Subject: [PATCH 1/2] Increase MAX_CONNECTIONS_GSM
+
+This works around the call hangups on the Nokia 6.1
+---
+ src/java/com/android/internal/telephony/GsmCdmaCallTracker.java | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/java/com/android/internal/telephony/GsmCdmaCallTracker.java b/src/java/com/android/internal/telephony/GsmCdmaCallTracker.java
+index e4e7f35b6..023b55838 100755
+--- a/src/java/com/android/internal/telephony/GsmCdmaCallTracker.java
++++ b/src/java/com/android/internal/telephony/GsmCdmaCallTracker.java
+@@ -62,7 +62,7 @@ public class GsmCdmaCallTracker extends CallTracker {
+ 
+     //***** Constants
+ 
+-    public static final int MAX_CONNECTIONS_GSM = 19;   //7 allowed in GSM + 12 from IMS for SRVCC
++    public static final int MAX_CONNECTIONS_GSM = 2000;   //7 allowed in GSM + 12 from IMS for SRVCC
+     private static final int MAX_CONNECTIONS_PER_CALL_GSM = 5; //only 5 connections allowed per call
+ 
+     private static final int MAX_CONNECTIONS_CDMA = 8;
+-- 
+2.18.0
+

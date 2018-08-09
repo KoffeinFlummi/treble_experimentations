@@ -1,0 +1,173 @@
+From 263a7271f72ab8ead0d8b53ec07bf34b2efc86d3 Mon Sep 17 00:00:00 2001
+From: KoffeinFlummi <koffeinflummi@gmail.com>
+Date: Sat, 28 Jul 2018 13:18:59 +0200
+Subject: [PATCH] Remove QuickSearchBox
+
+Change-Id: Ief7bda7b3bb1e8437cd5f60b0155180380d8f9ff
+---
+ .../android/launcher3/config/BaseFlags.java   |   2 +-
+ .../launcher3/provider/ImportDataTask.java    |   2 +-
+ .../launcher3/qsb/QsbContainerView.java       | 121 +++++++++---------
+ 3 files changed, 63 insertions(+), 62 deletions(-)
+
+diff --git a/src/com/android/launcher3/config/BaseFlags.java b/src/com/android/launcher3/config/BaseFlags.java
+index 6a4cbcbf0..b0345e65d 100644
+--- a/src/com/android/launcher3/config/BaseFlags.java
++++ b/src/com/android/launcher3/config/BaseFlags.java
+@@ -49,7 +49,7 @@ abstract class BaseFlags {
+     public static final boolean LAUNCHER3_SPRING_ICONS = true;
+ 
+     // Feature flag to enable moving the QSB on the 0th screen of the workspace.
+-    public static final boolean QSB_ON_FIRST_SCREEN = true;
++    public static final boolean QSB_ON_FIRST_SCREEN = false;
+     // When enabled the all-apps icon is not added to the hotseat.
+     public static final boolean NO_ALL_APPS_ICON = true;
+     // When enabled fling down gesture on the first workspace triggers search.
+diff --git a/src/com/android/launcher3/provider/ImportDataTask.java b/src/com/android/launcher3/provider/ImportDataTask.java
+index b83d3c0cd..1e611db73 100644
+--- a/src/com/android/launcher3/provider/ImportDataTask.java
++++ b/src/com/android/launcher3/provider/ImportDataTask.java
+@@ -132,7 +132,7 @@ public class ImportDataTask {
+         String profileId = Long.toString(UserManagerCompat.getInstance(mContext)
+                 .getSerialNumberForUser(Process.myUserHandle()));
+ 
+-        boolean createEmptyRowOnFirstScreen;
++        boolean createEmptyRowOnFirstScreen = false;
+         if (FeatureFlags.QSB_ON_FIRST_SCREEN) {
+             try (Cursor c = mContext.getContentResolver().query(mOtherFavoritesUri, null,
+                     // get items on the first row of the first screen
+diff --git a/src/com/android/launcher3/qsb/QsbContainerView.java b/src/com/android/launcher3/qsb/QsbContainerView.java
+index 65acaa973..be014fdd2 100644
+--- a/src/com/android/launcher3/qsb/QsbContainerView.java
++++ b/src/com/android/launcher3/qsb/QsbContainerView.java
+@@ -108,66 +108,67 @@ public class QsbContainerView extends FrameLayout {
+ 
+         private View createQsb(ViewGroup container) {
+             Activity activity = getActivity();
+-            mWidgetInfo = getSearchWidgetProvider(activity);
+-            if (mWidgetInfo == null) {
+-                // There is no search provider, just show the default widget.
+-                return QsbWidgetHostView.getDefaultView(container);
+-            }
+-
+-            AppWidgetManager widgetManager = AppWidgetManager.getInstance(activity);
+-            InvariantDeviceProfile idp = LauncherAppState.getIDP(activity);
+-
+-            Bundle opts = new Bundle();
+-            Rect size = AppWidgetResizeFrame.getWidgetSizeRanges(activity, idp.numColumns, 1, null);
+-            opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, size.left);
+-            opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, size.top);
+-            opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH, size.right);
+-            opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, size.bottom);
+-
+-            int widgetId = Utilities.getPrefs(activity).getInt(QSB_WIDGET_ID, -1);
+-            AppWidgetProviderInfo widgetInfo = widgetManager.getAppWidgetInfo(widgetId);
+-            boolean isWidgetBound = (widgetInfo != null) &&
+-                    widgetInfo.provider.equals(mWidgetInfo.provider);
+-
+-            int oldWidgetId = widgetId;
+-            if (!isWidgetBound) {
+-                if (widgetId > -1) {
+-                    // widgetId is already bound and its not the correct provider. reset host.
+-                    mQsbWidgetHost.deleteHost();
+-                }
+-
+-                widgetId = mQsbWidgetHost.allocateAppWidgetId();
+-                isWidgetBound = widgetManager.bindAppWidgetIdIfAllowed(
+-                        widgetId, mWidgetInfo.getProfile(), mWidgetInfo.provider, opts);
+-                if (!isWidgetBound) {
+-                    mQsbWidgetHost.deleteAppWidgetId(widgetId);
+-                    widgetId = -1;
+-                }
+-
+-                if (oldWidgetId != widgetId) {
+-                    saveWidgetId(widgetId);
+-                }
+-            }
+-
+-            if (isWidgetBound) {
+-                mQsb = (QsbWidgetHostView) mQsbWidgetHost.createView(activity, widgetId, mWidgetInfo);
+-                mQsb.setId(R.id.qsb_widget);
+-
+-                if (!Utilities.containsAll(AppWidgetManager.getInstance(activity)
+-                        .getAppWidgetOptions(widgetId), opts)) {
+-                    mQsb.updateAppWidgetOptions(opts);
+-                }
+-                mQsb.setPadding(0, 0, 0, 0);
+-                mQsbWidgetHost.startListening();
+-                return mQsb;
+-            }
+-
+-            // Return a default widget with setup icon.
+-            View v = QsbWidgetHostView.getDefaultView(container);
+-            View setupButton = v.findViewById(R.id.btn_qsb_setup);
+-            setupButton.setVisibility(View.VISIBLE);
+-            setupButton.setOnClickListener(this);
+-            return v;
++            return null;
++            //mWidgetInfo = getSearchWidgetProvider(activity);
++            //if (mWidgetInfo == null) {
++            //    // There is no search provider, just show the default widget.
++            //    return QsbWidgetHostView.getDefaultView(container);
++            //}
++
++            //AppWidgetManager widgetManager = AppWidgetManager.getInstance(activity);
++            //InvariantDeviceProfile idp = LauncherAppState.getIDP(activity);
++
++            //Bundle opts = new Bundle();
++            //Rect size = AppWidgetResizeFrame.getWidgetSizeRanges(activity, idp.numColumns, 1, null);
++            //opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, size.left);
++            //opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, size.top);
++            //opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH, size.right);
++            //opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, size.bottom);
++
++            //int widgetId = Utilities.getPrefs(activity).getInt(QSB_WIDGET_ID, -1);
++            //AppWidgetProviderInfo widgetInfo = widgetManager.getAppWidgetInfo(widgetId);
++            //boolean isWidgetBound = (widgetInfo != null) &&
++            //        widgetInfo.provider.equals(mWidgetInfo.provider);
++
++            //int oldWidgetId = widgetId;
++            //if (!isWidgetBound) {
++            //    if (widgetId > -1) {
++            //        // widgetId is already bound and its not the correct provider. reset host.
++            //        mQsbWidgetHost.deleteHost();
++            //    }
++
++            //    widgetId = mQsbWidgetHost.allocateAppWidgetId();
++            //    isWidgetBound = widgetManager.bindAppWidgetIdIfAllowed(
++            //            widgetId, mWidgetInfo.getProfile(), mWidgetInfo.provider, opts);
++            //    if (!isWidgetBound) {
++            //        mQsbWidgetHost.deleteAppWidgetId(widgetId);
++            //        widgetId = -1;
++            //    }
++
++            //    if (oldWidgetId != widgetId) {
++            //        saveWidgetId(widgetId);
++            //    }
++            //}
++
++            //if (isWidgetBound) {
++            //    mQsb = (QsbWidgetHostView) mQsbWidgetHost.createView(activity, widgetId, mWidgetInfo);
++            //    mQsb.setId(R.id.qsb_widget);
++
++            //    if (!Utilities.containsAll(AppWidgetManager.getInstance(activity)
++            //            .getAppWidgetOptions(widgetId), opts)) {
++            //        mQsb.updateAppWidgetOptions(opts);
++            //    }
++            //    mQsb.setPadding(0, 0, 0, 0);
++            //    mQsbWidgetHost.startListening();
++            //    return mQsb;
++            //}
++
++            //// Return a default widget with setup icon.
++            //View v = QsbWidgetHostView.getDefaultView(container);
++            //View setupButton = v.findViewById(R.id.btn_qsb_setup);
++            //setupButton.setVisibility(View.VISIBLE);
++            //setupButton.setOnClickListener(this);
++            //return v;
+         }
+ 
+         private void saveWidgetId(int widgetId) {
+-- 
+2.18.0
+

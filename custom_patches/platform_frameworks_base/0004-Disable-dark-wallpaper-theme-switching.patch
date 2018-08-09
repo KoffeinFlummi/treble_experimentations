@@ -1,0 +1,40 @@
+From a6ceb51d15624c5068cb79e04f3fdbbe207b9861 Mon Sep 17 00:00:00 2001
+From: KoffeinFlummi <koffeinflummi@gmail.com>
+Date: Sat, 28 Jul 2018 13:10:48 +0200
+Subject: [PATCH 4/6] Disable dark wallpaper theme switching
+
+This prevents the SystemUI crash when failing to load the dark colors
+---
+ .../systemui/statusbar/phone/StatusBar.java      | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/phone/StatusBar.java b/packages/SystemUI/src/com/android/systemui/statusbar/phone/StatusBar.java
+index 200cada972a..7b94dac5064 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/phone/StatusBar.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/phone/StatusBar.java
+@@ -4675,14 +4675,14 @@ public class StatusBar extends SystemUI implements DemoMode,
+                 .getWallpaperColors(WallpaperManager.FLAG_SYSTEM);
+         final boolean useDarkTheme = systemColors != null
+                 && (systemColors.getColorHints() & WallpaperColors.HINT_SUPPORTS_DARK_THEME) != 0;
+-        if (isUsingDarkTheme() != useDarkTheme) {
+-            try {
+-                mOverlayManager.setEnabled("com.android.systemui.theme.dark",
+-                        useDarkTheme, mCurrentUserId);
+-            } catch (RemoteException e) {
+-                Log.w(TAG, "Can't change theme", e);
+-            }
+-        }
++        // if (isUsingDarkTheme() != useDarkTheme) {
++        //     try {
++        //         mOverlayManager.setEnabled("com.android.systemui.theme.dark",
++        //                 useDarkTheme, mCurrentUserId);
++        //     } catch (RemoteException e) {
++        //         Log.w(TAG, "Can't change theme", e);
++        //     }
++        // }
+ 
+         // Lock wallpaper defines the color of the majority of the views, hence we'll use it
+         // to set our default theme.
+-- 
+2.18.0
+

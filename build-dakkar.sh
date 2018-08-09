@@ -279,14 +279,24 @@ function patch_things() {
         )
         bash "$(dirname "$0")/apply-patches.sh" patches
     else
+        repo manifest -r > release/"$rom_fp"/manifest.xml
+        bash "$(dirname "$0")"/list-patches.sh
+        cp patches.zip release/"$rom_fp"/patches.zip
+
+        cp -r "$(dirname "$0")/custom_patches" patches
+        bash "$(dirname "$0")/apply-patches.sh" .
+
         (
             cd device/phh/treble
             git clean -fdx
             bash generate.sh
         )
-        repo manifest -r > release/"$rom_fp"/manifest.xml
-        bash "$(dirname "$0")"/list-patches.sh
-        cp patches.zip release/"$rom_fp"/patches.zip
+
+        (
+            cd vendor/foss
+            git clean -fdx
+            bash update.sh
+        )
     fi
 }
 

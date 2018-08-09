@@ -1,0 +1,100 @@
+From f86bef557bcbecd57eb8e2279215889df4f3b45a Mon Sep 17 00:00:00 2001
+From: KoffeinFlummi <koffeinflummi@gmail.com>
+Date: Sat, 28 Jul 2018 13:24:05 +0200
+Subject: [PATCH 1/2] Add custom FOSS apps
+
+---
+ update.sh | 64 ++++++++++++++++++++++++++++---------------------------
+ 1 file changed, 33 insertions(+), 31 deletions(-)
+
+diff --git a/update.sh b/update.sh
+index cf3b871..19fb5bf 100644
+--- a/update.sh
++++ b/update.sh
+@@ -13,7 +13,21 @@ LOCAL_MODULE_CLASS := APPS
+ LOCAL_CERTIFICATE := PRESIGNED
+ LOCAL_OVERRIDES_PACKAGES := $3
+ include \$(BUILD_PREBUILT)
++EOF
++echo -e "\t$2 \\" >> apps.mk
++}
+ 
++addSystemCopy() {
++cat >> Android.mk <<EOF
++include \$(CLEAR_VARS)
++LOCAL_MODULE := $2
++LOCAL_MODULE_TAGS := optional
++LOCAL_SRC_FILES := bin/$1
++LOCAL_MODULE_CLASS := APPS
++LOCAL_CERTIFICATE := platform
++LOCAL_PRIVILEGED_MODULE := true
++LOCAL_OVERRIDES_PACKAGES := $3
++include \$(BUILD_PREBUILT)
+ EOF
+ echo -e "\t$2 \\" >> apps.mk
+ }
+@@ -37,42 +51,30 @@ downloadFromFdroid() {
+ 	marketvercode="$(xmlstarlet sel -t -m '//application[id="'"$1"'"]' -v ./marketvercode tmp/index.xml || true)"
+ 	apk="$(xmlstarlet sel -t -m '//application[id="'"$1"'"]/package[versioncode="'"$marketvercode"'"]' -v ./apkname tmp/index.xml || xmlstarlet sel -t -m '//application[id="'"$1"'"]/package[1]' -v ./apkname tmp/index.xml)"
+ 	wget $repo/$apk -O bin/$apk
+-	addCopy $apk $1 "$2"
++        if [[ $3 == "true" ]]; then
++            addSystemCopy $apk $1 "$2"
++        else
++            addCopy $apk $1 "$2"
++        fi
+ }
+ 
+ 
+-#YouTube viewer
+-downloadFromFdroid org.schabi.newpipe
+-#Ciphered SMS
+-downloadFromFdroid org.smssecure.smssecure "messaging"
+-#Navigation
+-downloadFromFdroid net.osmand.plus
+-#Web browser
+-#downloadFromFdroid org.mozilla.fennec_fdroid "Browser2 QuickSearchBox"
+-downloadFromFdroid acr.browser.lightning "Browser2 QuickSearchBox"
+-#Calendar
+-downloadFromFdroid ws.xsoh.etar Calendar
+-#Public transportation
+-downloadFromFdroid de.grobox.liberario
+-#Pdf viewer
+-downloadFromFdroid com.artifex.mupdf.viewer.app
+-#Keyboard/IME
+-downloadFromFdroid com.menny.android.anysoftkeyboard "LatinIME OpenWnn"
+-#Play Store download
+-downloadFromFdroid com.github.yeriomin.yalpstore
+-#Mail client
+-downloadFromFdroid com.fsck.k9 "Email"
+-#Ciphered Instant Messaging
+-downloadFromFdroid im.vector.alpha
+-#Calendar/Contacts sync
+-downloadFromFdroid at.bitfire.davdroid
+-#Nextcloud client
+-downloadFromFdroid com.nextcloud.client
++downloadFromFdroid com.github.yeriomin.yalpstore "" "true"
++downloadFromFdroid org.fitchfamily.android.dejavu
++downloadFromFdroid org.fdroid.fdroid
++
++wget https://microg.org/fdroid/repo/com.google.android.gms-12221403.apk -O bin/com.google.android.gms.apk
++addSystemCopy com.google.android.gms.apk com.google.android.gms
+ 
+-#TODO: Some social network?
+-#Facebook? Twitter? Reddit? Mastodon?
++wget https://microg.org/fdroid/repo/com.google.android.gsf-8.apk -O bin/com.google.android.gsf.apk
++addSystemCopy com.google.android.gsf.apk com.google.android.gsf
++
++wget https://microg.org/fdroid/repo/com.android.vending-16.apk -O bin/com.android.vending.apk
++addSystemCopy com.android.vending.apk com.android.vending
++
++wget https://github.com/microg/android_packages_apps_UnifiedNlp/releases/download/v1.6.8/UnifiedNlp.apk -O bin/org.microg.unifiednlp.apk
++addSystemCopy org.microg.unifiednlp.apk org.microg.unifiednlp
+ 
+-downloadFromFdroid org.fdroid.fdroid
+ echo >> apps.mk
+ 
+ rm -Rf tmp
+-- 
+2.18.0
+
