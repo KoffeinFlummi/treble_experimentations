@@ -246,6 +246,8 @@ function clone_or_checkout() {
 
 function init_local_manifest() {
     clone_or_checkout .repo/local_manifests treble_manifest
+
+    cp "$(dirname "$0")"/custom_manifest.xml .repo/local_manifests/
 }
 
 function init_patches() {
