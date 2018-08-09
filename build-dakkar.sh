@@ -17,8 +17,11 @@ elif [[ $(uname -s) = "Linux" ]];then
     jobs=$(nproc)
 fi
 
+chromium="66.0.3359.158"
+
 ## handle command line arguments
 read -p "Do you want to sync? " choice
+read -p "Do you want to rebuild chromium? " choice_chromium
 
 function help() {
     cat <<EOF
@@ -317,6 +320,30 @@ function jack_env() {
     fi
 }
 
+function build_chromium() {
+    # needs depot_tools
+    mkdir -p chromium
+    (
+        cd chromium
+        fetch --nohooks android --target_os_only=true
+        gclient sync --with_branch_heads -r $chromium --jobs $jobs
+
+        # Apply the Copperhead patches
+        if [ ! -d chromium_patches ]; then
+            git clone https://github.com/KoffeinFlummi/chromium_patches
+        fi
+        cd src
+        git am ../chromium_patches/*.patch
+
+        gn gen --args="target_os=\"android\" target_cpu=\"arm64\" is_debug=false is_official_build=true is_component_build=false symbol_level=0 ffmpeg_branding=\"Chrome\" proprietary_codecs=true android_channel=\"stable\" android_default_version_name=\"$chromium\" android_default_version_code=\"33591852\"" out/Default
+
+        cd out/Default
+        ninja -j $jobs monochrome_public_apk
+    )
+
+    cp chromium/src/out/Default/apks/MonochromePublic.apk external/chromium/prebuilt/arm64/
+}
+
 parse_options "$@"
 get_rom_type "$@"
 get_variants "$@"
@@ -344,6 +371,10 @@ sync_repo
 fi
 patch_things
 jack_env
+
+if [[ $choice_chromium == *"y"* ]];then
+build_chromium
+fi
 
 . build/envsetup.sh
 
