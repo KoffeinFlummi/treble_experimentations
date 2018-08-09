@@ -298,6 +298,8 @@ function patch_things() {
             bash update.sh
         )
     fi
+
+    cp "$(dirname "$0")"/keys/* build/make/target/product/security/
 }
 
 function build_variant() {
