@@ -309,9 +309,29 @@ function patch_things() {
 function build_variant() {
     lunch "$1"
     make $extra_make_options BUILD_NUMBER="$rom_fp" installclean
-    make $extra_make_options BUILD_NUMBER="$rom_fp" -j "$jobs" systemimage
+    make $extra_make_options BUILD_NUMBER="$rom_fp" -j "$jobs" target-files-package
     make $extra_make_options BUILD_NUMBER="$rom_fp" vndk-test-sepolicy
-    cp "$OUT"/system.img release/"$rom_fp"/system-"$2".img
+
+    # Sign target files
+    if [ ! -d out/host/linux-x86/framework/dumpkey.jar ]; then
+        make BUILD_NUMBER="$rom_fp" dumpkey
+    fi
+    ./build/tools/releasetools/sign_target_files_apks -o -d "$(dirname "$0")"/keys \
+        "$OUT"/obj/PACKAGING/target_files_intermediates/*.zip \
+        release/"$rom_fp"/target_files-"$2".zip
+
+    # Extract system image
+    unzip release/"$rom_fp"/target_files-"$2".zip IMAGES/system.img -d release/"$rom_fp"/
+    mv release/"$rom_fp"/IMAGES/system.img release/"$rom_fp"/system-"$2".img
+    rmdir release/"$rom_fp"/IMAGES
+
+    # Generate OTA updates
+    if [ ! -d out/host/linux-x86/bin/brillo_update_payload ]; then
+        make BUILD_NUMBER="$rom_fp" brillo_update_payload
+    fi
+    ./build/tools/releasetools/ota_from_target_files -v -k "$(dirname "$0")"/keys/releasekey \
+        release/"$rom_fp"/target_files-"$2".zip \
+        release/"$rom_fp"/ota_update-"$2".zip
 }
 
 function jack_env() {
