@@ -1,14 +1,14 @@
-From 3643085a4ba393f224677f65027d19f8aa959395 Mon Sep 17 00:00:00 2001
+From c98f311670f36ea8f505d494d5f2c2dd19e178f0 Mon Sep 17 00:00:00 2001
 From: KoffeinFlummi <koffeinflummi@gmail.com>
 Date: Sat, 28 Jul 2018 13:04:02 +0200
-Subject: [PATCH 1/2] Adjust core Makefile
+Subject: [PATCH] Adjust core Makefile
 
 ---
- target/product/core.mk | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ target/product/core.mk | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/target/product/core.mk b/target/product/core.mk
-index a2b0f1c55..657f62d50 100644
+index c72bb2f26..d884d9a54 100644
 --- a/target/product/core.mk
 +++ b/target/product/core.mk
 @@ -24,7 +24,7 @@ PRODUCT_PACKAGES += \
@@ -20,30 +20,20 @@ index a2b0f1c55..657f62d50 100644
      BuiltInPrintService \
      Calendar \
      CalendarProvider \
-@@ -42,7 +42,7 @@ PRODUCT_PACKAGES += \
-     KeyChain \
-     Keyguard \
-     LatinIME \
--    Launcher2 \
-+    Launcher3 \
-     ManagedProvisioning \
-     MtpDocumentsProvider \
-     PicoTts \
-@@ -51,7 +51,6 @@ PRODUCT_PACKAGES += \
+@@ -50,7 +50,6 @@ PRODUCT_PACKAGES += \
      PrintSpooler \
      PrintRecommendationService \
      ProxyHandler \
 -    QuickSearchBox \
+     SecureElement \
      Settings \
-     SharedStorageBackup \
-     StorageManager \
-@@ -59,7 +58,9 @@ PRODUCT_PACKAGES += \
-     TeleService \
+     SettingsIntelligence \
+@@ -62,7 +61,8 @@ PRODUCT_PACKAGES += \
+     Traceur \
      VpnDialogs \
      vr \
 -    MmsService
 +    MmsService \
-+    SysuiDarkThemeOverlay \
 +    PdfViewer
  
  # The set of packages whose code can be loaded by the system server.

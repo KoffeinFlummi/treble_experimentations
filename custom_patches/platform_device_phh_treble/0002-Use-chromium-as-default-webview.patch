@@ -1,7 +1,7 @@
-From 8179a50d963fb7cce51ace6544985796f396fb8b Mon Sep 17 00:00:00 2001
+From 08994e354a73ae95db5e4e93ce39f9e83a2688b7 Mon Sep 17 00:00:00 2001
 From: KoffeinFlummi <koffeinflummi@gmail.com>
 Date: Sat, 28 Jul 2018 13:08:40 +0200
-Subject: [PATCH 2/2] Use chromium as default webview
+Subject: [PATCH 2/3] Use chromium as default webview
 
 ---
  .../base/core/res/res/xml/config_webview_packages.xml           | 2 +-

@@ -1,4 +1,4 @@
-From dfce07d782b4a496f38d3f8c7329f7f151669687 Mon Sep 17 00:00:00 2001
+From 0db78f3ffff814a76bdcc76d5febd7df29e79903 Mon Sep 17 00:00:00 2001
 From: KoffeinFlummi <koffeinflummi@gmail.com>
 Date: Sat, 21 Jul 2018 01:23:33 +0200
 Subject: [PATCH 2/6] Allow package spoofing
@@ -11,11 +11,11 @@ Subject: [PATCH 2/6] Allow package spoofing
  4 files changed, 33 insertions(+), 1 deletion(-)
 
 diff --git a/core/res/AndroidManifest.xml b/core/res/AndroidManifest.xml
-index 8c0da4fb5b4..e5ff53d3448 100644
+index 66c497e9977..97c0a4ef5ea 100644
 --- a/core/res/AndroidManifest.xml
 +++ b/core/res/AndroidManifest.xml
-@@ -2144,6 +2144,13 @@
-         android:description="@string/permdesc_getPackageSize"
+@@ -1963,6 +1963,13 @@
+         android:label="@string/permlab_disableKeyguard"
          android:protectionLevel="normal" />
  
 +    <!-- @hide Allows an application to change the package signature as
@@ -25,14 +25,14 @@ index 8c0da4fb5b4..e5ff53d3448 100644
 +        android:label="@string/permlab_fakePackageSignature"
 +        android:description="@string/permdesc_fakePackageSignature" />
 +
-     <!-- @deprecated No longer useful, see
-          {@link android.content.pm.PackageManager#addPackageToPreferred}
-          for details. -->
+     <!-- ================================== -->
+     <!-- Permissions to access other installed applications  -->
+     <!-- ================================== -->
 diff --git a/core/res/res/values/config.xml b/core/res/res/values/config.xml
-index 3d757853948..0abd4351562 100644
+index 0b5dd7e70e8..611786b6052 100644
 --- a/core/res/res/values/config.xml
 +++ b/core/res/res/values/config.xml
-@@ -1507,6 +1507,8 @@
+@@ -1650,6 +1650,8 @@
      <string-array name="config_locationProviderPackageNames" translatable="false">
          <!-- The standard AOSP fused location provider -->
          <item>com.android.location.fused</item>
@@ -42,10 +42,10 @@ index 3d757853948..0abd4351562 100644
  
      <!-- This string array can be overriden to enable test location providers initially. -->
 diff --git a/core/res/res/values/strings.xml b/core/res/res/values/strings.xml
-index ce6815f10b3..ffc0765b5ba 100644
+index 3c5159c89bf..77e53b48acc 100644
 --- a/core/res/res/values/strings.xml
 +++ b/core/res/res/values/strings.xml
-@@ -714,6 +714,11 @@
+@@ -785,6 +785,11 @@
  
      <!--  Permissions -->
  
@@ -58,17 +58,22 @@ index ce6815f10b3..ffc0765b5ba 100644
      <string name="permlab_statusBar">disable or modify status bar</string>
      <!-- Description of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
 diff --git a/services/core/java/com/android/server/pm/PackageManagerService.java b/services/core/java/com/android/server/pm/PackageManagerService.java
-index d6b57283595..aaa262b6043 100644
+index 9ed2b9c1854..7e2dec07154 100644
 --- a/services/core/java/com/android/server/pm/PackageManagerService.java
 +++ b/services/core/java/com/android/server/pm/PackageManagerService.java
-@@ -3867,7 +3867,25 @@ public class PackageManagerService extends IPackageManager.Stub
-         packageInfo.packageName = packageInfo.applicationInfo.packageName =
-                 resolveExternalPackageNameLPr(p);
+@@ -3947,7 +3947,7 @@ public class PackageManagerService extends IPackageManager.Stub
+             packageInfo.packageName = packageInfo.applicationInfo.packageName =
+                     resolveExternalPackageNameLPr(p);
  
--        return packageInfo;
-+        return mayFakeSignature(p, packageInfo, permissions);
-+    }
-+
+-            return packageInfo;
++            return mayFakeSignature(p, packageInfo, permissions);
+         } else if ((flags & MATCH_UNINSTALLED_PACKAGES) != 0 && state.isAvailable(flags)) {
+             PackageInfo pi = new PackageInfo();
+             pi.packageName = ps.name;
+@@ -3974,6 +3974,24 @@ public class PackageManagerService extends IPackageManager.Stub
+         }
+     }
+ 
 +    private PackageInfo mayFakeSignature(PackageParser.Package p, PackageInfo pi,
 +            Set<String> permissions) {
 +        try {
@@ -85,9 +90,11 @@ index d6b57283595..aaa262b6043 100644
 +            Log.w("PackageManagerService.FAKE_PACKAGE_SIGNATURE", t);
 +        }
 +        return pi;
-     }
- 
++    }
++
      @Override
+     public void checkPackageStartable(String packageName, int userId) {
+         final int callingUid = Binder.getCallingUid();
 -- 
 2.18.0
 

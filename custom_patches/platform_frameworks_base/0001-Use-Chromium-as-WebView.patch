@@ -1,4 +1,4 @@
-From 5cc0dc4c271e0d037ef790049ba08f7838d34c92 Mon Sep 17 00:00:00 2001
+From bcf6898c68bc53faa54e23e4689371e1b2921439 Mon Sep 17 00:00:00 2001
 From: KoffeinFlummi <koffeinflummi@gmail.com>
 Date: Fri, 20 Jul 2018 14:37:10 +0200
 Subject: [PATCH 1/6] Use Chromium as WebView

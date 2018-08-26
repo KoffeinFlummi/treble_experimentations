@@ -1,4 +1,4 @@
-From c01f06375a152fb87a16880d6fe7836d9246ea00 Mon Sep 17 00:00:00 2001
+From 577cd13b81fa7520ee149c256cda3a8f08193d7c Mon Sep 17 00:00:00 2001
 From: KoffeinFlummi <koffeinflummi@gmail.com>
 Date: Tue, 7 Aug 2018 12:53:29 +0200
 Subject: [PATCH 5/6] Hardcode dark QuickSettings theme
@@ -9,10 +9,10 @@ Subject: [PATCH 5/6] Hardcode dark QuickSettings theme
  2 files changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/core/res/res/values/themes_device_defaults.xml b/core/res/res/values/themes_device_defaults.xml
-index bf0c9066039..d98d1696636 100644
+index 14e5082bdeb..001f28e14ac 100644
 --- a/core/res/res/values/themes_device_defaults.xml
 +++ b/core/res/res/values/themes_device_defaults.xml
-@@ -754,7 +754,7 @@ easier.
+@@ -1472,7 +1472,7 @@ easier.
  
      <!-- @hide DeviceDefault theme for a window that should use Settings theme colors
           but has a full dark palette. ONLY USED FOR QUICK SETTINGS THEME -->
@@ -22,10 +22,10 @@ index bf0c9066039..d98d1696636 100644
          <item name="colorPrimary">@color/primary_device_default_settings_light</item>
          <item name="colorPrimaryDark">@color/primary_dark_device_default_settings_light</item>
 diff --git a/packages/SystemUI/res/values/styles.xml b/packages/SystemUI/res/values/styles.xml
-index 90c5977e2a6..e7d692fd226 100644
+index e4f59892f79..53258b8272e 100644
 --- a/packages/SystemUI/res/values/styles.xml
 +++ b/packages/SystemUI/res/values/styles.xml
-@@ -328,7 +328,14 @@
+@@ -336,7 +336,14 @@
      </style>
  
      <!-- Overlay manager may replace this theme -->
