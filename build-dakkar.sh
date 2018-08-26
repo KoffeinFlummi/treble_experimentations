@@ -324,8 +324,6 @@ function patch_things() {
             bash update.sh
         )
     fi
-
-    cp "$(dirname "$0")"/keys/* build/make/target/product/security/
 }
 
 function build_variant() {
@@ -335,7 +333,7 @@ function build_variant() {
     make $extra_make_options BUILD_NUMBER="$rom_fp" vndk-test-sepolicy
 
     # Sign target files
-    if [ ! -d out/host/linux-x86/framework/dumpkey.jar ]; then
+    if [ ! -f out/host/linux-x86/framework/dumpkey.jar ]; then
         make BUILD_NUMBER="$rom_fp" dumpkey
     fi
     ./build/tools/releasetools/sign_target_files_apks -o -d "$(dirname "$0")"/keys \
@@ -348,7 +346,7 @@ function build_variant() {
     rmdir release/"$rom_fp"/IMAGES
 
     # Generate OTA updates
-    if [ ! -d out/host/linux-x86/bin/brillo_update_payload ]; then
+    if [ ! -f out/host/linux-x86/bin/brillo_update_payload ]; then
         make BUILD_NUMBER="$rom_fp" brillo_update_payload
     fi
     ./build/tools/releasetools/ota_from_target_files -v -k "$(dirname "$0")"/keys/releasekey \
