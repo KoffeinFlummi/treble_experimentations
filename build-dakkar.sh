@@ -37,6 +37,7 @@ ROM types:
 
   aosp80
   aosp81
+  aosp90
   carbon
   lineage
   rr
@@ -81,6 +82,13 @@ function get_rom_type() {
                 mainrepo="https://android.googlesource.com/platform/manifest"
                 mainbranch="android-8.1.0_r43"
                 localManifestBranch="android-8.1"
+                treble_generate=""
+                extra_make_options=""
+                ;;
+            aosp90)
+                mainrepo="https://android.googlesource.com/platform/manifest"
+                mainbranch="android-9.0.0_r1"
+                localManifestBranch="android-9.0"
                 treble_generate=""
                 extra_make_options=""
                 ;;
