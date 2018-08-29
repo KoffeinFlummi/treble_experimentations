@@ -1,0 +1,25 @@
+From 8732c935eaf936ee55ae1af6c25f66d2814f5e1a Mon Sep 17 00:00:00 2001
+From: KoffeinFlummi <koffeinflummi@gmail.com>
+Date: Wed, 29 Aug 2018 00:32:22 +0200
+Subject: [PATCH 2/2] Update microg GmsCore
+
+---
+ update.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/update.sh b/update.sh
+index 19fb5bf..2ac684c 100644
+--- a/update.sh
++++ b/update.sh
+@@ -63,7 +63,7 @@ downloadFromFdroid com.github.yeriomin.yalpstore "" "true"
+ downloadFromFdroid org.fitchfamily.android.dejavu
+ downloadFromFdroid org.fdroid.fdroid
+ 
+-wget https://microg.org/fdroid/repo/com.google.android.gms-12221403.apk -O bin/com.google.android.gms.apk
++wget https://microg.org/fdroid/repo/com.google.android.gms-12879000.apk -O bin/com.google.android.gms.apk
+ addSystemCopy com.google.android.gms.apk com.google.android.gms
+ 
+ wget https://microg.org/fdroid/repo/com.google.android.gsf-8.apk -O bin/com.google.android.gsf.apk
+-- 
+2.18.0
+
