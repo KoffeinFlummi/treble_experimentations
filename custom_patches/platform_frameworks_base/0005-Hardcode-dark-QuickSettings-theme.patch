@@ -1,12 +1,12 @@
-From 577cd13b81fa7520ee149c256cda3a8f08193d7c Mon Sep 17 00:00:00 2001
+From 01841ffb8935c882907b9719d8c2aded25be1042 Mon Sep 17 00:00:00 2001
 From: KoffeinFlummi <koffeinflummi@gmail.com>
 Date: Tue, 7 Aug 2018 12:53:29 +0200
 Subject: [PATCH 5/6] Hardcode dark QuickSettings theme
 
 ---
- core/res/res/values/themes_device_defaults.xml | 2 +-
- packages/SystemUI/res/values/styles.xml        | 9 ++++++++-
- 2 files changed, 9 insertions(+), 2 deletions(-)
+ core/res/res/values/themes_device_defaults.xml |  2 +-
+ packages/SystemUI/res/values/styles.xml        | 10 +++++++++-
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/core/res/res/values/themes_device_defaults.xml b/core/res/res/values/themes_device_defaults.xml
 index 14e5082bdeb..001f28e14ac 100644
@@ -22,10 +22,10 @@ index 14e5082bdeb..001f28e14ac 100644
          <item name="colorPrimary">@color/primary_device_default_settings_light</item>
          <item name="colorPrimaryDark">@color/primary_dark_device_default_settings_light</item>
 diff --git a/packages/SystemUI/res/values/styles.xml b/packages/SystemUI/res/values/styles.xml
-index e4f59892f79..53258b8272e 100644
+index e4f59892f79..7965e7b2355 100644
 --- a/packages/SystemUI/res/values/styles.xml
 +++ b/packages/SystemUI/res/values/styles.xml
-@@ -336,7 +336,14 @@
+@@ -336,7 +336,15 @@
      </style>
  
      <!-- Overlay manager may replace this theme -->
@@ -37,6 +37,7 @@ index e4f59892f79..53258b8272e 100644
 +        <item name="android:colorAccent">@*android:color/accent_device_default_dark</item>
 +        <item name="android:colorControlNormal">?android:attr/textColorPrimary</item>
 +        <item name="android:colorBackgroundFloating">@*android:color/material_grey_900</item>
++        <item name="android:panelColorBackground">@*android:color/material_grey_800</item>
 +    </style>
  
      <style name="qs_theme" parent="qs_base">
