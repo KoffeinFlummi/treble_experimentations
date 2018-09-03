@@ -1,0 +1,26 @@
+From 29b1153dbc548a01217c71d396e2691783c061b3 Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Mon, 2 Jan 2017 18:51:57 -0500
+Subject: [PATCH 08/20] hide sensitive information while locked by default
+
+Change-Id: I3427b476ab522913a6ac12e0dde83c304da9b296
+---
+ packages/SettingsProvider/res/values/defaults.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/packages/SettingsProvider/res/values/defaults.xml b/packages/SettingsProvider/res/values/defaults.xml
+index 95bc0d5ffcc..c5cbf053cff 100644
+--- a/packages/SettingsProvider/res/values/defaults.xml
++++ b/packages/SettingsProvider/res/values/defaults.xml
+@@ -167,7 +167,7 @@
+     <integer name="def_lock_screen_show_notifications">1</integer>
+ 
+     <!-- Default for Settings.Secure.LOCK_SCREEN_ALLOW_PRIVATE_NOTIFICATIONS -->
+-    <bool name="def_lock_screen_allow_private_notifications">true</bool>
++    <bool name="def_lock_screen_allow_private_notifications">false</bool>
+ 
+     <!-- Default for Settings.Global.HEADS_UP_NOTIFICATIONS_ENABLED, 1==on -->
+     <integer name="def_heads_up_enabled">1</integer>
+-- 
+2.18.0
+

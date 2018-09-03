@@ -1,0 +1,24 @@
+From 50db9ac564d9d3d707674a40f77499ddf9dca4ab Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Sat, 7 Oct 2017 16:28:57 -0400
+Subject: [PATCH] require OTHER_SENSORS permission for sensors
+
+---
+ libs/sensor/Sensor.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/libs/sensor/Sensor.cpp b/libs/sensor/Sensor.cpp
+index a0e368c7e..4f3fe88b8 100644
+--- a/libs/sensor/Sensor.cpp
++++ b/libs/sensor/Sensor.cpp
+@@ -52,6 +52,7 @@ Sensor::Sensor(struct sensor_t const& hwSensor, const uuid_t& uuid, int halVersi
+     mMinDelay = hwSensor.minDelay;
+     mFlags = 0;
+     mUuid = uuid;
++    mRequiredPermission = "android.permission.OTHER_SENSORS";
+ 
+     // Set fifo event count zero for older devices which do not support batching. Fused
+     // sensors also have their fifo counts set to zero.
+-- 
+2.18.0
+

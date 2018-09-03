@@ -1,7 +1,7 @@
-From 0c6af9e4ecbc0821268a586a6f26b64aac831fc4 Mon Sep 17 00:00:00 2001
+From 3e784239781164c4248b941b1a9426fe061fe055 Mon Sep 17 00:00:00 2001
 From: KoffeinFlummi <koffeinflummi@gmail.com>
 Date: Sat, 28 Jul 2018 13:10:48 +0200
-Subject: [PATCH 4/6] Disable dark wallpaper theme switching
+Subject: [PATCH 04/20] Disable dark wallpaper theme switching
 
 This prevents the SystemUI crash when failing to load the dark colors
 ---

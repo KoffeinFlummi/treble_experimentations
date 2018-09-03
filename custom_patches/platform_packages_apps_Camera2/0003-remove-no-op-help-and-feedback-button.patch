@@ -1,0 +1,63 @@
+From 56d53979d6297f60f913671bb92821468af690c1 Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Thu, 10 Aug 2017 20:23:39 -0400
+Subject: [PATCH 3/3] remove no-op help and feedback button
+
+---
+ res/xml/camera_preferences.xml                        |  5 -----
+ .../camera/settings/CameraSettingsActivity.java       | 11 -----------
+ 2 files changed, 16 deletions(-)
+
+diff --git a/res/xml/camera_preferences.xml b/res/xml/camera_preferences.xml
+index 771396742..9c2a1a274 100644
+--- a/res/xml/camera_preferences.xml
++++ b/res/xml/camera_preferences.xml
+@@ -71,9 +71,4 @@
+         android:title="@string/pref_camera_exposure_compensation" />
+   </PreferenceScreen>
+ 
+-  <!-- Google Help and feedback launcher -->
+-  <Preference
+-      android:key="pref_launch_help"
+-      android:title="@string/setting_google_help_and_feedback" />
+-
+ </PreferenceScreen>
+diff --git a/src/com/android/camera/settings/CameraSettingsActivity.java b/src/com/android/camera/settings/CameraSettingsActivity.java
+index 50641fd22..380bd6eed 100644
+--- a/src/com/android/camera/settings/CameraSettingsActivity.java
++++ b/src/com/android/camera/settings/CameraSettingsActivity.java
+@@ -45,7 +45,6 @@ import com.android.camera.one.OneCameraModule;
+ import com.android.camera.settings.PictureSizeLoader.PictureSizes;
+ import com.android.camera.settings.SettingsUtil.SelectedVideoQualities;
+ import com.android.camera.util.CameraSettingsActivityHelper;
+-import com.android.camera.util.GoogleHelpHelper;
+ import com.android.camera.util.Size;
+ import com.android.camera2.R;
+ import com.android.ex.camera2.portability.CameraAgentFactory;
+@@ -139,7 +138,6 @@ public class CameraSettingsActivity extends FragmentActivity {
+ 
+         public static final String PREF_CATEGORY_RESOLUTION = "pref_category_resolution";
+         public static final String PREF_CATEGORY_ADVANCED = "pref_category_advanced";
+-        public static final String PREF_LAUNCH_HELP = "pref_launch_help";
+         private static final Log.Tag TAG = new Log.Tag("SettingsFragment");
+         private static DecimalFormat sMegaPixelFormat = new DecimalFormat("##0.0");
+         private String[] mCamcorderProfileNames;
+@@ -216,15 +214,6 @@ public class CameraSettingsActivity extends FragmentActivity {
+                 setPreferenceScreenIntent(advancedScreen);
+             }
+ 
+-            Preference helpPref = findPreference(PREF_LAUNCH_HELP);
+-            helpPref.setOnPreferenceClickListener(
+-                    new OnPreferenceClickListener() {
+-                        @Override
+-                        public boolean onPreferenceClick(Preference preference) {
+-                            new GoogleHelpHelper(activity).launchGoogleHelp();
+-                            return true;
+-                        }
+-                    });
+             getPreferenceScreen().getSharedPreferences()
+                     .registerOnSharedPreferenceChangeListener(this);
+         }
+-- 
+2.18.0
+

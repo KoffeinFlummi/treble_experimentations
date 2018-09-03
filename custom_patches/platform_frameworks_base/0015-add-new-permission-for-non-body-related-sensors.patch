@@ -1,0 +1,100 @@
+From dd00b54b3c192e3556754c549ef49a4459b93796 Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Sat, 7 Oct 2017 15:54:42 -0400
+Subject: [PATCH 15/20] add new permission for non-body-related sensors
+
+Change-Id: Iba1abf73bd1e9e9c1c651a8e50c759873d69f408
+---
+ core/java/android/content/pm/PackageParser.java   |  2 ++
+ core/res/AndroidManifest.xml                      | 14 ++++++++++++++
+ core/res/res/values/strings.xml                   | 15 +++++++++++++++
+ .../pm/permission/PermissionManagerService.java   |  2 +-
+ 4 files changed, 32 insertions(+), 1 deletion(-)
+
+diff --git a/core/java/android/content/pm/PackageParser.java b/core/java/android/content/pm/PackageParser.java
+index 2da2cb4c928..531bbca8fc6 100644
+--- a/core/java/android/content/pm/PackageParser.java
++++ b/core/java/android/content/pm/PackageParser.java
+@@ -278,6 +278,8 @@ public class PackageParser {
+      */
+     public static final PackageParser.NewPermissionInfo NEW_PERMISSIONS[] =
+         new PackageParser.NewPermissionInfo[] {
++            new PackageParser.NewPermissionInfo(android.Manifest.permission.OTHER_SENSORS,
++                    android.os.Build.VERSION_CODES.CUR_DEVELOPMENT + 1, 0),
+             new PackageParser.NewPermissionInfo(android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                     android.os.Build.VERSION_CODES.DONUT, 0),
+             new PackageParser.NewPermissionInfo(android.Manifest.permission.READ_PHONE_STATE,
+diff --git a/core/res/AndroidManifest.xml b/core/res/AndroidManifest.xml
+index 3af0ab1ffe2..24c462d0564 100644
+--- a/core/res/AndroidManifest.xml
++++ b/core/res/AndroidManifest.xml
+@@ -1129,6 +1129,20 @@
+         android:description="@string/permdesc_useFingerprint"
+         android:protectionLevel="normal" />
+ 
++    <!-- @hide -->
++    <permission-group android:name="android.permission-group.OTHER_SENSORS"
++        android:icon="@drawable/perm_group_location"
++        android:label="@string/permgrouplab_otherSensors"
++        android:description="@string/permgroupdesc_otherSensors"
++        android:priority="1000" />
++
++    <!-- @hide -->
++    <permission android:name="android.permission.OTHER_SENSORS"
++        android:permissionGroup="android.permission-group.OTHER_SENSORS"
++        android:label="@string/permlab_otherSensors"
++        android:description="@string/permdesc_otherSensors"
++        android:protectionLevel="dangerous" />
++
+     <!-- Allows an app to use device supported biometric modalities.
+          <p>Protection level: normal
+     -->
+diff --git a/core/res/res/values/strings.xml b/core/res/res/values/strings.xml
+index 30e3ef67238..562ae86e361 100644
+--- a/core/res/res/values/strings.xml
++++ b/core/res/res/values/strings.xml
+@@ -748,6 +748,14 @@
+         &lt;b><xliff:g id="app_name" example="Gmail">%1$s</xliff:g>&lt;/b> to access sensor data about your vital signs?</string>
+ 
+     <!-- Title of a category of application permissions, listed so the user can choose whether they want to allow the application to do this. -->
++    <string name="permgrouplab_otherSensors">Sensors</string>
++    <!-- Description of a category of application permissions, listed so the user can choose whether they want to allow the application to do this. -->
++    <string name="permgroupdesc_otherSensors">access sensor data about orientation, movement, etc.</string>
++    <!-- Title of a category of application permissions, listed so the user can choose whether they want to allow the application to do this. -->
++    <!-- Message shown to the user when the apps requests permission from this group -->
++    <string name="permgrouprequest_otherSensors">Allow
++        &lt;b><xliff:g id="app_name" example="Gmail">%1$s</xliff:g>&lt;/b> to access other sensors?</string>
++
+     <string name="permgrouplab_network">Network</string>
+     <!-- Description of a category of application permissions, listed so the user can choose whether they want to allow the application to do this. -->
+     <string name="permgroupdesc_network">network access</string>
+@@ -1069,6 +1077,13 @@
+     <string name="permdesc_bodySensors" product="default">Allows the app to access data from sensors
+     that monitor your physical condition, such as your heart rate.</string>
+ 
++    <!-- Title of the sensors permission, listed so the user can decide whether to allow the application to access sensor data. [CHAR LIMIT=80] -->
++    <string name="permlab_otherSensors">access sensors (like the compass)
++    </string>
++    <!-- Description of the sensors permission, listed so the user can decide whether to allow the application to access data from sensors. [CHAR LIMIT=NONE] -->
++    <string name="permdesc_otherSensors" product="default">Allows the app to access data from sensors
++    monitoring orientation, movement, vibration (including low frequency sound) and environmental data</string>
++
+     <!-- Title of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
+     <string name="permlab_readCalendar">Read calendar events and details</string>
+     <!-- Description of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
+diff --git a/services/core/java/com/android/server/pm/permission/PermissionManagerService.java b/services/core/java/com/android/server/pm/permission/PermissionManagerService.java
+index cbe1b3abed8..94e978b0fad 100644
+--- a/services/core/java/com/android/server/pm/permission/PermissionManagerService.java
++++ b/services/core/java/com/android/server/pm/permission/PermissionManagerService.java
+@@ -1325,7 +1325,7 @@ public class PermissionManagerService {
+     }
+ 
+     public static boolean isAlwaysRuntimePermission(final String permission) {
+-        return Manifest.permission.INTERNET.equals(permission);
++        return Manifest.permission.INTERNET.equals(permission) || Manifest.permission.OTHER_SENSORS.equals(permission);
+     }
+ 
+     private void grantRequestedRuntimePermissions(PackageParser.Package pkg, int[] userIds,
+-- 
+2.18.0
+

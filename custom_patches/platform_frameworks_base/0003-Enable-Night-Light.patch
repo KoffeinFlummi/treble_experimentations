@@ -1,7 +1,7 @@
-From f63b307f01881ba0de4395204f203ceaf950eb40 Mon Sep 17 00:00:00 2001
+From c08221b29965d22343228d5de5d92c433999e035 Mon Sep 17 00:00:00 2001
 From: KoffeinFlummi <koffeinflummi@gmail.com>
 Date: Sat, 21 Jul 2018 19:39:57 +0200
-Subject: [PATCH 3/6] Enable Night Light
+Subject: [PATCH 03/20] Enable Night Light
 
 ---
  core/res/res/values/config.xml | 2 +-

@@ -1,7 +1,7 @@
-From 01841ffb8935c882907b9719d8c2aded25be1042 Mon Sep 17 00:00:00 2001
+From e9d306b60ac6e43a98af43129c3225e59229fc58 Mon Sep 17 00:00:00 2001
 From: KoffeinFlummi <koffeinflummi@gmail.com>
 Date: Tue, 7 Aug 2018 12:53:29 +0200
-Subject: [PATCH 5/6] Hardcode dark QuickSettings theme
+Subject: [PATCH 05/20] Hardcode dark QuickSettings theme
 
 ---
  core/res/res/values/themes_device_defaults.xml |  2 +-

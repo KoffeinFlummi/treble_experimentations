@@ -1,0 +1,52 @@
+From 1fb5b94de6958406f4e1bbe277b1147379ee4a9b Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Sat, 22 Jul 2017 21:43:50 -0400
+Subject: [PATCH 1/4] always treat INTERNET as a runtime permission
+
+Change-Id: Ibf679e9da3b43afa8af42f6923b9adf9534ac608
+---
+ .../permission/model/AppPermissionGroup.java               | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/src/com/android/packageinstaller/permission/model/AppPermissionGroup.java b/src/com/android/packageinstaller/permission/model/AppPermissionGroup.java
+index aafce8df..e6087de4 100644
+--- a/src/com/android/packageinstaller/permission/model/AppPermissionGroup.java
++++ b/src/com/android/packageinstaller/permission/model/AppPermissionGroup.java
+@@ -26,6 +26,7 @@ import android.content.pm.PackageItemInfo;
+ import android.content.pm.PackageManager;
+ import android.content.pm.PermissionGroupInfo;
+ import android.content.pm.PermissionInfo;
++import android.Manifest;
+ import android.os.Build;
+ import android.os.Process;
+ import android.os.UserHandle;
+@@ -338,7 +339,7 @@ public final class AppPermissionGroup implements Comparable<AppPermissionGroup>
+                     && !ArrayUtils.contains(filterPermissions, permission.getName())) {
+                 continue;
+             }
+-            if (mAppSupportsRuntimePermissions) {
++            if (mAppSupportsRuntimePermissions || Manifest.permission.INTERNET.equals(permission.getName())) {
+                 if (permission.isGranted()) {
+                     return true;
+                 }
+@@ -371,7 +372,7 @@ public final class AppPermissionGroup implements Comparable<AppPermissionGroup>
+                 continue;
+             }
+ 
+-            if (mAppSupportsRuntimePermissions) {
++            if (mAppSupportsRuntimePermissions || Manifest.permission.INTERNET.equals(permission.getName())) {
+                 // Do not touch permissions fixed by the system.
+                 if (permission.isSystemFixed()) {
+                     return false;
+@@ -473,7 +474,7 @@ public final class AppPermissionGroup implements Comparable<AppPermissionGroup>
+                 continue;
+             }
+ 
+-            if (mAppSupportsRuntimePermissions) {
++            if (mAppSupportsRuntimePermissions || Manifest.permission.INTERNET.equals(permission.getName())) {
+                 // Do not touch permissions fixed by the system.
+                 if (permission.isSystemFixed()) {
+                     return false;
+-- 
+2.18.0
+

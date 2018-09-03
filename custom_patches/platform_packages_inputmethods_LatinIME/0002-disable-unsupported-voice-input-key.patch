@@ -1,0 +1,66 @@
+From 44ce5771c9b46c8a4bb623ff608a69cf0343624c Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Thu, 15 Dec 2016 05:56:06 -0500
+Subject: [PATCH 2/4] disable unsupported voice input key
+
+---
+ java/res/values-sw430dp/config-per-form-factor.xml              | 2 +-
+ java/res/values/config-per-form-factor.xml                      | 2 +-
+ java/res/xml/prefs_screen_preferences.xml                       | 2 +-
+ .../com/android/inputmethod/latin/settings/SettingsValues.java  | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/java/res/values-sw430dp/config-per-form-factor.xml b/java/res/values-sw430dp/config-per-form-factor.xml
+index 8868081c3..2199ab6b2 100644
+--- a/java/res/values-sw430dp/config-per-form-factor.xml
++++ b/java/res/values-sw430dp/config-per-form-factor.xml
+@@ -24,7 +24,7 @@
+     <!-- Whether or not Popup on key press is enabled by default -->
+     <bool name="config_default_key_preview_popup">true</bool>
+     <bool name="config_default_sound_enabled">false</bool>
+-    <bool name="config_enable_show_voice_key_option">true</bool>
++    <bool name="config_enable_show_voice_key_option">false</bool>
+     <bool name="config_key_selection_by_dragging_finger">true</bool>
+     <!-- Showing more keys keyboard, just above the touched point if true, aligned to the key if
+          false -->
+diff --git a/java/res/values/config-per-form-factor.xml b/java/res/values/config-per-form-factor.xml
+index 67fc75134..1bbf1640e 100644
+--- a/java/res/values/config-per-form-factor.xml
++++ b/java/res/values/config-per-form-factor.xml
+@@ -24,7 +24,7 @@
+     <!-- Whether or not Popup on key press is enabled by default -->
+     <bool name="config_default_key_preview_popup">true</bool>
+     <bool name="config_default_sound_enabled">false</bool>
+-    <bool name="config_enable_show_voice_key_option">true</bool>
++    <bool name="config_enable_show_voice_key_option">false</bool>
+     <bool name="config_key_selection_by_dragging_finger">true</bool>
+     <!-- Showing more keys keyboard, just above the touched point if true, aligned to the key if
+          false -->
+diff --git a/java/res/xml/prefs_screen_preferences.xml b/java/res/xml/prefs_screen_preferences.xml
+index 101edc855..540f9f6a6 100644
+--- a/java/res/xml/prefs_screen_preferences.xml
++++ b/java/res/xml/prefs_screen_preferences.xml
+@@ -48,6 +48,6 @@
+     <CheckBoxPreference
+         android:key="pref_voice_input_key"
+         android:title="@string/voice_input"
+-        android:defaultValue="true"
++        android:defaultValue="false"
+         android:persistent="true" />
+ </PreferenceScreen>
+diff --git a/java/src/com/android/inputmethod/latin/settings/SettingsValues.java b/java/src/com/android/inputmethod/latin/settings/SettingsValues.java
+index 57018244f..9b12cb3b2 100644
+--- a/java/src/com/android/inputmethod/latin/settings/SettingsValues.java
++++ b/java/src/com/android/inputmethod/latin/settings/SettingsValues.java
+@@ -139,7 +139,7 @@ public class SettingsValues {
+                 DebugSettings.PREF_SLIDING_KEY_INPUT_PREVIEW, true);
+         mShowsVoiceInputKey = needsToShowVoiceInputKey(prefs, res)
+                 && mInputAttributes.mShouldShowVoiceInputKey
+-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
++                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && false;
+         mIncludesOtherImesInLanguageSwitchList = Settings.ENABLE_SHOW_LANGUAGE_SWITCH_KEY_SETTINGS
+                 ? prefs.getBoolean(Settings.PREF_INCLUDE_OTHER_IMES_IN_LANGUAGE_SWITCH_LIST, false)
+                 : true /* forcibly */;
+-- 
+2.18.0
+

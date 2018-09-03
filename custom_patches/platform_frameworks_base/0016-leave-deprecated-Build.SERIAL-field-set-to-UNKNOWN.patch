@@ -1,0 +1,35 @@
+From 49f71f256a388a1d6a55d522417672d596b86586 Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Wed, 6 Sep 2017 21:40:48 -0400
+Subject: [PATCH 16/20] leave deprecated Build.SERIAL field set to UNKNOWN
+
+Only support fetching the serial number via the new Build.getSerial()
+requiring the READ_PHONE_STATE permission.
+
+Change-Id: I6e2c62c7361c2bac6e0fe4c1497f84ddb3f09644
+---
+ .../com/android/server/am/ActivityManagerService.java     | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/services/core/java/com/android/server/am/ActivityManagerService.java b/services/core/java/com/android/server/am/ActivityManagerService.java
+index 692d6063fc0..5370fd097d7 100644
+--- a/services/core/java/com/android/server/am/ActivityManagerService.java
++++ b/services/core/java/com/android/server/am/ActivityManagerService.java
+@@ -7752,13 +7752,7 @@ public class ActivityManagerService extends IActivityManager.Stub
+                 }
+             }
+ 
+-            // We deprecated Build.SERIAL and it is not accessible to
+-            // apps that target the v2 security sandbox and to apps that
+-            // target APIs higher than O MR1. Since access to the serial
+-            // is now behind a permission we push down the value.
+-            final String buildSerial = (appInfo.targetSandboxVersion < 2
+-                    && appInfo.targetSdkVersion < Build.VERSION_CODES.P)
+-                            ? sTheRealBuildSerial : Build.UNKNOWN;
++            final String buildSerial = Build.UNKNOWN;
+ 
+             // Check if this is a secondary process that should be incorporated into some
+             // currently active instrumentation.  (Note we do this AFTER all of the profiling
+-- 
+2.18.0
+

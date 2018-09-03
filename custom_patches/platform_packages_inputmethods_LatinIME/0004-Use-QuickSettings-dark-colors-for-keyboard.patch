@@ -1,7 +1,7 @@
-From d9809be49d8d2c8591ec08d5cb9186b550457902 Mon Sep 17 00:00:00 2001
+From ba228550c1671feb3464922af9eda6438e34f620 Mon Sep 17 00:00:00 2001
 From: KoffeinFlummi <koffeinflummi@gmail.com>
 Date: Tue, 7 Aug 2018 12:55:58 +0200
-Subject: [PATCH] Use QuickSettings dark colors for keyboard
+Subject: [PATCH 4/4] Use QuickSettings dark colors for keyboard
 
 Change-Id: I3c1421197b034a9cb65aac38a60cbf4de5d5f39d
 ---

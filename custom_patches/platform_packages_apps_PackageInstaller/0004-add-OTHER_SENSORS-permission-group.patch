@@ -1,0 +1,27 @@
+From d5bbafda9f424d771e4b8282946f045234d733db Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Sat, 7 Oct 2017 15:56:35 -0400
+Subject: [PATCH 4/4] add OTHER_SENSORS permission group
+
+Change-Id: Ib9e0249874987a9b31e955a44aa5b30a6521fd53
+---
+ src/com/android/packageinstaller/permission/utils/Utils.java | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/com/android/packageinstaller/permission/utils/Utils.java b/src/com/android/packageinstaller/permission/utils/Utils.java
+index 423b319e..d22a399b 100644
+--- a/src/com/android/packageinstaller/permission/utils/Utils.java
++++ b/src/com/android/packageinstaller/permission/utils/Utils.java
+@@ -52,7 +52,8 @@ public final class Utils {
+             Manifest.permission_group.PHONE,
+             Manifest.permission_group.MICROPHONE,
+             Manifest.permission_group.STORAGE,
+-            Manifest.permission_group.NETWORK
++            Manifest.permission_group.NETWORK,
++            Manifest.permission_group.OTHER_SENSORS
+     };
+ 
+     private static final Intent LAUNCHER_INTENT = new Intent(Intent.ACTION_MAIN, null)
+-- 
+2.18.0
+

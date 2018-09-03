@@ -1,0 +1,44 @@
+From c28f43c9d3c93188ee6f3310ebcd582efd8a64e5 Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Sat, 7 Oct 2017 15:55:58 -0400
+Subject: [PATCH 3/4] always treat OTHER_SENSORS as a runtime permission
+
+Change-Id: Ie4b94543bf18ac0e89987a69773cb84a633804c9
+---
+ .../permission/model/AppPermissionGroup.java                | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/com/android/packageinstaller/permission/model/AppPermissionGroup.java b/src/com/android/packageinstaller/permission/model/AppPermissionGroup.java
+index e6087de4..61730996 100644
+--- a/src/com/android/packageinstaller/permission/model/AppPermissionGroup.java
++++ b/src/com/android/packageinstaller/permission/model/AppPermissionGroup.java
+@@ -339,7 +339,7 @@ public final class AppPermissionGroup implements Comparable<AppPermissionGroup>
+                     && !ArrayUtils.contains(filterPermissions, permission.getName())) {
+                 continue;
+             }
+-            if (mAppSupportsRuntimePermissions || Manifest.permission.INTERNET.equals(permission.getName())) {
++            if (mAppSupportsRuntimePermissions || Manifest.permission.INTERNET.equals(permission.getName()) || Manifest.permission.OTHER_SENSORS.equals(permission.getName())) {
+                 if (permission.isGranted()) {
+                     return true;
+                 }
+@@ -372,7 +372,7 @@ public final class AppPermissionGroup implements Comparable<AppPermissionGroup>
+                 continue;
+             }
+ 
+-            if (mAppSupportsRuntimePermissions || Manifest.permission.INTERNET.equals(permission.getName())) {
++            if (mAppSupportsRuntimePermissions || Manifest.permission.INTERNET.equals(permission.getName()) || Manifest.permission.OTHER_SENSORS.equals(permission.getName())) {
+                 // Do not touch permissions fixed by the system.
+                 if (permission.isSystemFixed()) {
+                     return false;
+@@ -474,7 +474,7 @@ public final class AppPermissionGroup implements Comparable<AppPermissionGroup>
+                 continue;
+             }
+ 
+-            if (mAppSupportsRuntimePermissions || Manifest.permission.INTERNET.equals(permission.getName())) {
++            if (mAppSupportsRuntimePermissions || Manifest.permission.INTERNET.equals(permission.getName()) || Manifest.permission.OTHER_SENSORS.equals(permission.getName())) {
+                 // Do not touch permissions fixed by the system.
+                 if (permission.isSystemFixed()) {
+                     return false;
+-- 
+2.18.0
+

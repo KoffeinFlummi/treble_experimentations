@@ -1,0 +1,116 @@
+From 3f24795ea96dbfe4d7812ae778916dc85c4ec161 Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Fri, 21 Jul 2017 08:42:55 -0400
+Subject: [PATCH 13/20] mark INTERNET as a special dangerous permission
+
+It's treated as a runtime permission even for legacy apps since it's
+enforced at more than API boundaries.
+
+It needs to be granted by default for apps with runtime permission
+support for now to maintain compatibility.
+
+Change-Id: Ieb60818a468175e5e7719c2de455e8a2b4fff26d
+---
+ core/res/AndroidManifest.xml                  |  2 +-
+ .../server/pm/PackageManagerService.java      |  3 ++-
+ .../permission/PermissionManagerService.java  | 22 +++++++++++++++----
+ 3 files changed, 21 insertions(+), 6 deletions(-)
+
+diff --git a/core/res/AndroidManifest.xml b/core/res/AndroidManifest.xml
+index 97c0a4ef5ea..75e6610a3eb 100644
+--- a/core/res/AndroidManifest.xml
++++ b/core/res/AndroidManifest.xml
+@@ -1346,7 +1346,7 @@
+     <permission android:name="android.permission.INTERNET"
+         android:description="@string/permdesc_createNetworkSockets"
+         android:label="@string/permlab_createNetworkSockets"
+-        android:protectionLevel="normal|instant" />
++        android:protectionLevel="dangerous|instant" />
+ 
+     <!-- Allows applications to access information about networks.
+          <p>Protection level: normal
+diff --git a/services/core/java/com/android/server/pm/PackageManagerService.java b/services/core/java/com/android/server/pm/PackageManagerService.java
+index 7e2dec07154..24127bafbd9 100644
+--- a/services/core/java/com/android/server/pm/PackageManagerService.java
++++ b/services/core/java/com/android/server/pm/PackageManagerService.java
+@@ -19406,7 +19406,8 @@ public class PackageManagerService extends IPackageManager.Stub
+             }
+ 
+             // If this permission was granted by default, make sure it is.
+-            if ((oldFlags & FLAG_PERMISSION_GRANTED_BY_DEFAULT) != 0) {
++            if ((oldFlags & FLAG_PERMISSION_GRANTED_BY_DEFAULT) != 0
++                    || PermissionManagerService.isAlwaysRuntimePermission(bp.getName())) {
+                 if (permissionsState.grantRuntimePermission(bp, userId)
+                         != PERMISSION_OPERATION_FAILURE) {
+                     writeRuntimePermissions = true;
+diff --git a/services/core/java/com/android/server/pm/permission/PermissionManagerService.java b/services/core/java/com/android/server/pm/permission/PermissionManagerService.java
+index c51a72406b5..cbe1b3abed8 100644
+--- a/services/core/java/com/android/server/pm/permission/PermissionManagerService.java
++++ b/services/core/java/com/android/server/pm/permission/PermissionManagerService.java
+@@ -767,7 +767,8 @@ public class PermissionManagerService {
+                     // their permissions as always granted runtime ones since we need
+                     // to keep the review required permission flag per user while an
+                     // install permission's state is shared across all users.
+-                    if (!appSupportsRuntimePermissions && !mSettings.mPermissionReviewRequired) {
++                    if (!appSupportsRuntimePermissions && !mSettings.mPermissionReviewRequired
++                            && !isAlwaysRuntimePermission(bp.name)) {
+                         // For legacy apps dangerous permissions are install time ones.
+                         grant = GRANT_INSTALL;
+                     } else if (origPermissions.hasInstallPermission(bp.getName())) {
+@@ -877,7 +878,8 @@ public class PermissionManagerService {
+                                                 updatedUserIds, userId);
+                                     }
+                                 } else if (mSettings.mPermissionReviewRequired
+-                                        && !appSupportsRuntimePermissions) {
++                                        && !appSupportsRuntimePermissions
++                                        && !isAlwaysRuntimePermission(bp.name)) {
+                                     // For legacy apps that need a permission review, every new
+                                     // runtime permission is granted but it is pending a review.
+                                     // We also need to review only platform defined runtime
+@@ -898,6 +900,14 @@ public class PermissionManagerService {
+                                         updatedUserIds = ArrayUtils.appendInt(
+                                                 updatedUserIds, userId);
+                                     }
++                                } else if (isAlwaysRuntimePermission(bp.name) &&
++                                        origPermissions.getRuntimePermissionState(bp.name, userId) == null) {
++                                    if (permissionsState.grantRuntimePermission(bp, userId)
++                                            != PermissionsState.PERMISSION_OPERATION_FAILURE) {
++                                        // We changed the permission, hence have to write.
++                                        updatedUserIds = ArrayUtils.appendInt(
++                                                updatedUserIds, userId);
++                                    }
+                                 }
+                                 // Propagate the permission flags.
+                                 permissionsState.updatePermissionFlags(bp, userId, flags, flags);
+@@ -1314,6 +1324,10 @@ public class PermissionManagerService {
+         }
+     }
+ 
++    public static boolean isAlwaysRuntimePermission(final String permission) {
++        return Manifest.permission.INTERNET.equals(permission);
++    }
++
+     private void grantRequestedRuntimePermissions(PackageParser.Package pkg, int[] userIds,
+             String[] grantedPermissions, int callingUid, PermissionCallback callback) {
+         for (int userId : userIds) {
+@@ -1350,7 +1364,7 @@ public class PermissionManagerService {
+                     && (grantedPermissions == null
+                            || ArrayUtils.contains(grantedPermissions, permission))) {
+                 final int flags = permissionsState.getPermissionFlags(permission, userId);
+-                if (supportsRuntimePermissions) {
++                if (supportsRuntimePermissions || isAlwaysRuntimePermission(bp.name)) {
+                     // Installer cannot change immutable permissions.
+                     if ((flags & immutableFlags) == 0) {
+                         grantRuntimePermission(permission, pkg.packageName, false, callingUid,
+@@ -1409,7 +1423,7 @@ public class PermissionManagerService {
+         // install permission's state is shared across all users.
+         if (mSettings.mPermissionReviewRequired
+                 && pkg.applicationInfo.targetSdkVersion < Build.VERSION_CODES.M
+-                && bp.isRuntime()) {
++                && bp.isRuntime() && !isAlwaysRuntimePermission(permName)) {
+             return;
+         }
+ 
+-- 
+2.18.0
+

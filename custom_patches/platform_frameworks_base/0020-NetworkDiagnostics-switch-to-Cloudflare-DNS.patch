@@ -1,0 +1,33 @@
+From 7bcad29f0cea1fb00a9f414dd6786518ae87eacb Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Mon, 2 Apr 2018 13:06:33 -0400
+Subject: [PATCH 20/20] NetworkDiagnostics: switch to Cloudflare DNS
+
+Cloudflare DNS has a better privacy policy than Google Public DNS and
+has DNS-over-TLS and DNS-over-HTTPS so it won't be a downgrade when
+Android ships one of them.
+
+Change-Id: Ida24063569cd53d285fae1a9a445b887b603e722
+---
+ .../com/android/server/connectivity/NetworkDiagnostics.java   | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/services/core/java/com/android/server/connectivity/NetworkDiagnostics.java b/services/core/java/com/android/server/connectivity/NetworkDiagnostics.java
+index c471f0caa3c..1f467152022 100644
+--- a/services/core/java/com/android/server/connectivity/NetworkDiagnostics.java
++++ b/services/core/java/com/android/server/connectivity/NetworkDiagnostics.java
+@@ -86,9 +86,9 @@ import libcore.io.IoUtils;
+ public class NetworkDiagnostics {
+     private static final String TAG = "NetworkDiagnostics";
+ 
+-    private static final InetAddress TEST_DNS4 = NetworkUtils.numericToInetAddress("8.8.8.8");
++    private static final InetAddress TEST_DNS4 = NetworkUtils.numericToInetAddress("1.0.0.1");
+     private static final InetAddress TEST_DNS6 = NetworkUtils.numericToInetAddress(
+-            "2001:4860:4860::8888");
++            "2606:4700:4700::1001");
+ 
+     // For brevity elsewhere.
+     private static final long now() {
+-- 
+2.18.0
+

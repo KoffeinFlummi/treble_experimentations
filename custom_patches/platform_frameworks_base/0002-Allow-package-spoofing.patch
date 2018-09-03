@@ -1,7 +1,7 @@
-From 0db78f3ffff814a76bdcc76d5febd7df29e79903 Mon Sep 17 00:00:00 2001
+From 1032b249221e25241a6ed487dfa2ade356235e0f Mon Sep 17 00:00:00 2001
 From: KoffeinFlummi <koffeinflummi@gmail.com>
 Date: Sat, 21 Jul 2018 01:23:33 +0200
-Subject: [PATCH 2/6] Allow package spoofing
+Subject: [PATCH 02/20] Allow package spoofing
 
 ---
  core/res/AndroidManifest.xml                  |  7 +++++++
