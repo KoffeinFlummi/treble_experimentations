@@ -1,7 +1,7 @@
-From 263a7271f72ab8ead0d8b53ec07bf34b2efc86d3 Mon Sep 17 00:00:00 2001
+From 88c9dc998e892579db31996e7e94ad1f19a5225c Mon Sep 17 00:00:00 2001
 From: KoffeinFlummi <koffeinflummi@gmail.com>
 Date: Sat, 28 Jul 2018 13:18:59 +0200
-Subject: [PATCH] Remove QuickSearchBox
+Subject: [PATCH 1/2] Remove QuickSearchBox
 
 Change-Id: Ief7bda7b3bb1e8437cd5f60b0155180380d8f9ff
 ---
@@ -11,10 +11,10 @@ Change-Id: Ief7bda7b3bb1e8437cd5f60b0155180380d8f9ff
  3 files changed, 63 insertions(+), 62 deletions(-)
 
 diff --git a/src/com/android/launcher3/config/BaseFlags.java b/src/com/android/launcher3/config/BaseFlags.java
-index 6a4cbcbf0..b0345e65d 100644
+index f4c6380b7..1d5d97199 100644
 --- a/src/com/android/launcher3/config/BaseFlags.java
 +++ b/src/com/android/launcher3/config/BaseFlags.java
-@@ -49,7 +49,7 @@ abstract class BaseFlags {
+@@ -39,7 +39,7 @@ abstract class BaseFlags {
      public static final boolean LAUNCHER3_SPRING_ICONS = true;
  
      // Feature flag to enable moving the QSB on the 0th screen of the workspace.
@@ -22,9 +22,9 @@ index 6a4cbcbf0..b0345e65d 100644
 +    public static final boolean QSB_ON_FIRST_SCREEN = false;
      // When enabled the all-apps icon is not added to the hotseat.
      public static final boolean NO_ALL_APPS_ICON = true;
-     // When enabled fling down gesture on the first workspace triggers search.
+ 
 diff --git a/src/com/android/launcher3/provider/ImportDataTask.java b/src/com/android/launcher3/provider/ImportDataTask.java
-index b83d3c0cd..1e611db73 100644
+index b1dd003f8..a30687d60 100644
 --- a/src/com/android/launcher3/provider/ImportDataTask.java
 +++ b/src/com/android/launcher3/provider/ImportDataTask.java
 @@ -132,7 +132,7 @@ public class ImportDataTask {
@@ -37,10 +37,10 @@ index b83d3c0cd..1e611db73 100644
              try (Cursor c = mContext.getContentResolver().query(mOtherFavoritesUri, null,
                      // get items on the first row of the first screen
 diff --git a/src/com/android/launcher3/qsb/QsbContainerView.java b/src/com/android/launcher3/qsb/QsbContainerView.java
-index 65acaa973..be014fdd2 100644
+index b26d39fda..a26209628 100644
 --- a/src/com/android/launcher3/qsb/QsbContainerView.java
 +++ b/src/com/android/launcher3/qsb/QsbContainerView.java
-@@ -108,66 +108,67 @@ public class QsbContainerView extends FrameLayout {
+@@ -111,66 +111,67 @@ public class QsbContainerView extends FrameLayout {
  
          private View createQsb(ViewGroup container) {
              Activity activity = getActivity();
