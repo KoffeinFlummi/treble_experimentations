@@ -17,9 +17,6 @@ elif [[ $(uname -s) = "Linux" ]];then
     jobs=$(nproc)
 fi
 
-## handle command line arguments
-read -p "Do you want to sync? " choice
-
 function help() {
     cat <<EOF
 Syntax:
@@ -366,6 +363,9 @@ if [[ -z "$mainrepo" || ${#variant_codes[*]} -eq 0 ]]; then
     >&2 help
     exit 1
 fi
+
+## handle command line arguments
+read -p "Do you want to sync? " choice
 
 # Use a python2 virtualenv if system python is python3
 python=$(python -V | awk '{print $2}' | head -c2)
