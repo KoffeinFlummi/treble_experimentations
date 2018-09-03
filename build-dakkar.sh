@@ -220,7 +220,6 @@ function parse_variant() {
         exit 2
     fi
 
-    #echo "treble_${processor_type}_${partition_layout}${gapps_selection}${su_selection}-userdebug"
     echo "treble_${processor_type}_${partition_layout}${gapps_selection}${su_selection}-${variant_selection}"
 }
 
