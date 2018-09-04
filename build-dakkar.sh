@@ -381,6 +381,7 @@ init_main_repo
 init_local_manifest
 init_patches
 sync_repo
+zcat "$(dirname "$0")/MonochromePublic.apk.gz" > external/chromium/prebuilt/arm64/MonochromePublic.apk
 fi
 patch_things
 jack_env
