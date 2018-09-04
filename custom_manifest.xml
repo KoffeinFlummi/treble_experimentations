@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
-  <remote name="copperhead"
-          fetch="https://github.com/AndroidHardening/"
-          revision="refs/heads/oreo-m2-s3-release" />
+  <remote name="KoffeinFlummi"
+          fetch="https://github.com/KoffeinFlummi/"
+          revision="master" />
 
   <remove-project name="platform/packages/apps/QuickSearchBox" />
   <remove-project name="platform/external/chromium-webview" />
-  <project path="external/chromium" name="platform_external_chromium" remote="copperhead" />
-  <project path="packages/apps/PdfViewer" name="platform_packages_apps_PdfViewer" remote="copperhead" />
+  <project path="external/chromium" name="platform_external_chromium" remote="KoffeinFlummi" />
+  <project path="packages/apps/PdfViewer" name="platform_packages_apps_PdfViewer" remote="KoffeinFlummi" />
 </manifest>
