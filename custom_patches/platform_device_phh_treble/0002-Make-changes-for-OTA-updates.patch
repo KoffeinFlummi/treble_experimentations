@@ -1,7 +1,7 @@
-From 3f85dce143d321753ed680340cc5b8525e9f6826 Mon Sep 17 00:00:00 2001
+From cb6872fb9975461f37f2cc4646645aa074d6efe6 Mon Sep 17 00:00:00 2001
 From: KoffeinFlummi <koffeinflummi@gmail.com>
 Date: Wed, 22 Aug 2018 18:17:02 +0200
-Subject: [PATCH 3/3] Make changes for OTA updates
+Subject: [PATCH 2/2] Make changes for OTA updates
 
 ---
  phhgsi_arm64_ab/BoardConfig.mk | 4 ++++

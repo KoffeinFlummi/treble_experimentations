@@ -5,7 +5,7 @@ set -e
 patches="$(readlink -f -- $1)"
 
 for project in $(cd $patches/patches; echo *);do
-	p="$(tr _ / <<<$project |sed -e 's;platform/;;g')"
+	p="$(tr _ / <<<$project |sed -e 's;platform/;;g' | sed 's/hardware\/overlay/hardware_overlay/')"
 	[ "$p" == build ] && p=build/make
 	repo sync -l --force-sync $p
 	pushd $p
