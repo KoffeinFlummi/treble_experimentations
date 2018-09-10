@@ -1,4 +1,4 @@
-From 8732c935eaf936ee55ae1af6c25f66d2814f5e1a Mon Sep 17 00:00:00 2001
+From fc8aaf1781d0caa26f07260ce3062e114ede8729 Mon Sep 17 00:00:00 2001
 From: KoffeinFlummi <koffeinflummi@gmail.com>
 Date: Wed, 29 Aug 2018 00:32:22 +0200
 Subject: [PATCH 2/2] Update microg GmsCore
@@ -8,10 +8,10 @@ Subject: [PATCH 2/2] Update microg GmsCore
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/update.sh b/update.sh
-index 19fb5bf..2ac684c 100644
+index 2b39e5a..434c607 100644
 --- a/update.sh
 +++ b/update.sh
-@@ -63,7 +63,7 @@ downloadFromFdroid com.github.yeriomin.yalpstore "" "true"
+@@ -64,7 +64,7 @@ downloadFromFdroid com.github.yeriomin.yalpstore "" "true"
  downloadFromFdroid org.fitchfamily.android.dejavu
  downloadFromFdroid org.fdroid.fdroid
  

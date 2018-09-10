@@ -1,24 +1,24 @@
-From 8a4a83dfb0ac0d13d9276183fd522f9aeb12e256 Mon Sep 17 00:00:00 2001
+From 23b40323e94884f82d557c169fbee1fc7abcb1f4 Mon Sep 17 00:00:00 2001
 From: KoffeinFlummi <koffeinflummi@gmail.com>
 Date: Sat, 28 Jul 2018 13:24:05 +0200
 Subject: [PATCH 1/2] Add custom FOSS apps
 
 ---
- update.sh | 64 ++++++++++++++++++++++++++++---------------------------
- 1 file changed, 33 insertions(+), 31 deletions(-)
+ update.sh | 67 ++++++++++++++++++++++++++++---------------------------
+ 1 file changed, 34 insertions(+), 33 deletions(-)
 
 diff --git a/update.sh b/update.sh
-index cf3b871..19fb5bf 100644
+index 12fa159..2b39e5a 100644
 --- a/update.sh
 +++ b/update.sh
-@@ -13,7 +13,21 @@ LOCAL_MODULE_CLASS := APPS
+@@ -13,6 +13,21 @@ LOCAL_MODULE_CLASS := APPS
  LOCAL_CERTIFICATE := PRESIGNED
  LOCAL_OVERRIDES_PACKAGES := $3
  include \$(BUILD_PREBUILT)
 +EOF
 +echo -e "\t$2 \\" >> apps.mk
 +}
- 
++
 +addSystemCopy() {
 +cat >> Android.mk <<EOF
 +include \$(CLEAR_VARS)
@@ -30,10 +30,10 @@ index cf3b871..19fb5bf 100644
 +LOCAL_PRIVILEGED_MODULE := true
 +LOCAL_OVERRIDES_PACKAGES := $3
 +include \$(BUILD_PREBUILT)
+ 
  EOF
  echo -e "\t$2 \\" >> apps.mk
- }
-@@ -37,42 +51,30 @@ downloadFromFdroid() {
+@@ -37,44 +52,30 @@ downloadFromFdroid() {
  	marketvercode="$(xmlstarlet sel -t -m '//application[id="'"$1"'"]' -v ./marketvercode tmp/index.xml || true)"
  	apk="$(xmlstarlet sel -t -m '//application[id="'"$1"'"]/package[versioncode="'"$marketvercode"'"]' -v ./apkname tmp/index.xml || xmlstarlet sel -t -m '//application[id="'"$1"'"]/package[1]' -v ./apkname tmp/index.xml)"
  	wget $repo/$apk -O bin/$apk
@@ -46,6 +46,8 @@ index cf3b871..19fb5bf 100644
  }
  
  
+-#phh's Superuser
+-downloadFromFdroid me.phh.superuser
 -#YouTube viewer
 -downloadFromFdroid org.schabi.newpipe
 -#Ciphered SMS
