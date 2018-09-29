@@ -1,0 +1,26 @@
+From 631ddd0bd1530ed358d71b6be3869de3f49895da Mon Sep 17 00:00:00 2001
+From: KoffeinFlummi <koffeinflummi@gmail.com>
+Date: Fri, 28 Sep 2018 15:47:38 +0200
+Subject: [PATCH 2/2] Enable MAC randomization dev option
+
+This seems to be non functional on the Nokia 6.1
+---
+ res/values/config.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/res/values/config.xml b/res/values/config.xml
+index 0a733079a9..57904cb8fb 100755
+--- a/res/values/config.xml
++++ b/res/values/config.xml
+@@ -43,7 +43,7 @@
+ 
+     <!-- Whether to show Connected MAC Randomization in Developer Options
+          as not all devices can support dynamic MAC address change.  -->
+-    <bool name="config_wifi_support_connected_mac_randomization">false</bool>
++    <bool name="config_wifi_support_connected_mac_randomization">true</bool>
+ 
+     <!-- Fully-qualified class name for the implementation of the FeatureFactory to be instantiated. -->
+     <string name="config_featureFactory" translatable="false">com.android.settings.overlay.FeatureFactoryImpl</string>
+-- 
+2.19.0
+
