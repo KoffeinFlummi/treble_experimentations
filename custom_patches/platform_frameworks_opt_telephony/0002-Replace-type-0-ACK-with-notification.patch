@@ -1,0 +1,66 @@
+From 9033fab2dd3be1e01929bd94dea81d0826f0aea4 Mon Sep 17 00:00:00 2001
+From: KoffeinFlummi <koffeinflummi@gmail.com>
+Date: Fri, 28 Sep 2018 15:45:23 +0200
+Subject: [PATCH 2/2] Replace type 0 ACK with notification
+
+---
+ .../telephony/gsm/GsmInboundSmsHandler.java   | 26 ++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
+
+diff --git a/src/java/com/android/internal/telephony/gsm/GsmInboundSmsHandler.java b/src/java/com/android/internal/telephony/gsm/GsmInboundSmsHandler.java
+index 3fe2a3360..9dcba7d92 100644
+--- a/src/java/com/android/internal/telephony/gsm/GsmInboundSmsHandler.java
++++ b/src/java/com/android/internal/telephony/gsm/GsmInboundSmsHandler.java
+@@ -17,9 +17,12 @@
+ package com.android.internal.telephony.gsm;
+ 
+ import android.app.Activity;
++import android.app.Notification;
++import android.app.NotificationManager;
+ import android.content.Context;
+ import android.os.Message;
+ import android.provider.Telephony.Sms.Intents;
++import android.util.Log;
+ 
+ import com.android.internal.telephony.CommandsInterface;
+ import com.android.internal.telephony.InboundSmsHandler;
+@@ -32,6 +35,7 @@ import com.android.internal.telephony.VisualVoicemailSmsFilter;
+ import com.android.internal.telephony.uicc.IccRecords;
+ import com.android.internal.telephony.uicc.UiccController;
+ import com.android.internal.telephony.uicc.UsimServiceTable;
++import com.android.internal.telephony.util.NotificationChannelController;
+ 
+ /**
+  * This class broadcasts incoming SMS messages to interested apps after storing them in
+@@ -110,7 +114,27 @@ public class GsmInboundSmsHandler extends InboundSmsHandler {
+             // As per 3GPP TS 23.040 9.2.3.9, Type Zero messages should not be
+             // Displayed/Stored/Notified. They should only be acknowledged.
+             log("Received short message type 0, Don't display or store it. Send Ack");
+-            return Intents.RESULT_SMS_HANDLED;
++
++            Log.w(getName(), "Type 0 SMS received, ACK suppressed. [sender="+sms.getDisplayOriginatingAddress()+", body="+sms.getDisplayMessageBody()+"]");
++            CharSequence title = "Type 0 SMS received";
++            CharSequence message = "ACK was suppressed. Sender: "+sms.getDisplayOriginatingAddress()+", Body: "+sms.getDisplayMessageBody();
++            Notification notification =
++                    new Notification.Builder(mContext)
++                            .setSmallIcon(com.android.internal.R.drawable.sym_action_chat)
++                            .setWhen(System.currentTimeMillis())
++                            .setShowWhen(true)
++                            .setTicker(title)
++                            .setDefaults(Notification.DEFAULT_ALL)
++                            .setContentTitle(title)
++                            .setContentText(message)
++                            .setVisibility(Notification.VISIBILITY_PUBLIC)
++                            .setChannelId(NotificationChannelController.CHANNEL_ID_SMS)
++                            .build();
++            NotificationManager mNotificationManager =
++                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
++            mNotificationManager.notify("InboundSmsHandler", 0xbeef, notification);
++
++            return Activity.RESULT_OK;
+         }
+ 
+         // Send SMS-PP data download messages to UICC. See 3GPP TS 31.111 section 7.1.1.
+-- 
+2.19.0
+
