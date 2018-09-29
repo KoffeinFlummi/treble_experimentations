@@ -267,6 +267,7 @@ function init_local_manifest() {
     clone_or_checkout .repo/local_manifests treble_manifest
 
     cp "$(dirname "$0")"/custom_manifest.xml .repo/local_manifests/
+    rm .repo/local_manifests/opengapps.xml # not used and takes ages to sync
 }
 
 function init_patches() {
