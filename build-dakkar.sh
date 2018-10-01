@@ -195,10 +195,10 @@ declare -A su_selection_map
 su_selection_map[su]=S
 su_selection_map[nosu]=N
 
-declare -A variant_selection_map
-variant_selection_map[eng]=eng
-variant_selection_map[user]=user
-variant_selection_map[userdebug]=userdebug
+declare -A build_type_selection_map
+build_type_selection_map[eng]=eng
+build_type_selection_map[user]=user
+build_type_selection_map[userdebug]=userdebug
 
 function parse_variant() {
     local -a pieces
@@ -208,11 +208,7 @@ function parse_variant() {
     local partition_layout=${partition_layout_map[${pieces[1]}]}
     local gapps_selection=${gapps_selection_map[${pieces[2]}]}
     local su_selection=${su_selection_map[${pieces[3]}]}
-    local variant_selection=${variant_selection_map[${pieces[4]}]}
-
-    if [[ -z "$variant_selection" ]]; then
-        local variant_selection=userdebug
-    fi
+    local build_type_selection=${build_type_selection_map[${pieces[4]}]}
 
     if [[ -z "$processor_type" || -z "$partition_layout" || -z "$gapps_selection" || -z "$su_selection" ]]; then
         >&2 echo "Invalid variant '$1'"
@@ -220,7 +216,7 @@ function parse_variant() {
         exit 2
     fi
 
-    echo "treble_${processor_type}_${partition_layout}${gapps_selection}${su_selection}-${variant_selection}"
+    echo "treble_${processor_type}_${partition_layout}${gapps_selection}${su_selection}-${build_type_selection}"
 }
 
 declare -a variant_codes
@@ -228,8 +224,12 @@ declare -a variant_names
 function get_variants() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
-            *-*-*-*)
+            *-*-*-*-*)
                 variant_codes[${#variant_codes[*]}]=$(parse_variant "$1")
+                variant_names[${#variant_names[*]}]="$1"
+                ;;
+            *-*-*-*)
+                variant_codes[${#variant_codes[*]}]=$(parse_variant "$1-userdebug")
                 variant_names[${#variant_names[*]}]="$1"
                 ;;
         esac
