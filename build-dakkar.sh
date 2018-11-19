@@ -33,15 +33,19 @@ ROM types:
   aosp81
   aosp90
   carbon
-  lineage
+  e-0.2
+  lineage151
+  lineage160
   rr
-  pixel
+  pixel81
+  pixel90
   crdroid
   mokee
   aicp
   aokp
-  slim
   aex
+  slim
+  havoc
 
 Variants are dash-joined combinations of (in order):
 * processor type
@@ -70,37 +74,51 @@ function get_rom_type() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
             aosp80)
-                mainrepo="https://android.googlesource.com/platform/manifest"
+                mainrepo="https://android.googlesource.com/platform/manifest.git"
                 mainbranch="android-vts-8.0_r4"
                 localManifestBranch="master"
                 treble_generate=""
                 extra_make_options=""
                 ;;
             aosp81)
-                mainrepo="https://android.googlesource.com/platform/manifest"
-                mainbranch="android-8.1.0_r43"
+                mainrepo="https://android.googlesource.com/platform/manifest.git"
+                mainbranch="android-8.1.0_r30"
                 localManifestBranch="android-8.1"
                 treble_generate=""
                 extra_make_options=""
                 ;;
             aosp90)
-                mainrepo="https://android.googlesource.com/platform/manifest"
-                mainbranch="android-9.0.0_r8"
+                mainrepo="https://android.googlesource.com/platform/manifest.git"
+                mainbranch="android-9.0.0_r1"
                 localManifestBranch="android-9.0"
                 treble_generate=""
                 extra_make_options=""
                 ;;
             carbon)
-                mainrepo="https://github.com/CarbonROM/android"
+                mainrepo="https://github.com/CarbonROM/android.git"
                 mainbranch="cr-6.1"
                 localManifestBranch="android-8.1"
                 treble_generate="carbon"
                 extra_make_options="WITHOUT_CHECK_API=true"
                 ;;
-            lineage)
+            e-0.2)
+                mainrepo="https://gitlab.e.foundation/e/os/android/"
+                mainbranch="eelo-0.2"
+                localManifestBranch="android-9.0"
+                treble_generate="lineage"
+                extra_make_options="WITHOUT_CHECK_API=true"
+                ;;
+            lineage151)
                 mainrepo="https://github.com/LineageOS/android.git"
                 mainbranch="lineage-15.1"
                 localManifestBranch="android-8.1"
+                treble_generate="lineage"
+                extra_make_options="WITHOUT_CHECK_API=true"
+                ;;
+            lineage160)
+                mainrepo="https://github.com/LineageOS/android.git"
+                mainbranch="lineage-16.0"
+                localManifestBranch="android-9.0"
                 treble_generate="lineage"
                 extra_make_options="WITHOUT_CHECK_API=true"
                 ;;
@@ -111,15 +129,22 @@ function get_rom_type() {
                 treble_generate="rr"
                 extra_make_options="WITHOUT_CHECK_API=true"
                 ;;
-            pixel)
-                mainrepo="https://github.com/PixelExperience/manifest"
+            pixel81)
+                mainrepo="https://github.com/PixelExperience/manifest.git"
                 mainbranch="oreo-mr1"
                 localManifestBranch="android-8.1"
                 treble_generate="pixel"
                 extra_make_options="WITHOUT_CHECK_API=true"
                 ;;
+            pixel90)
+                mainrepo="https://github.com/PixelExperience-P/manifest.git"
+                mainbranch="pie"
+                localManifestBranch="android-9.0"
+                treble_generate="pixel"
+                extra_make_options="WITHOUT_CHECK_API=true"
+                ;;
             crdroid)
-                mainrepo="https://github.com/crdroidandroid/android"
+                mainrepo="https://github.com/crdroidandroid/android.git"
                 mainbranch="8.1"
                 localManifestBranch="android-8.1"
                 treble_generate="crdroid"
@@ -153,11 +178,18 @@ function get_rom_type() {
                 treble_generate="aex"
                 extra_make_options="WITHOUT_CHECK_API=true"
                 ;;
-	    slim)
-                mainrepo="git://github.com/SlimRoms/platform_manifest.git "
+            slim)
+                mainrepo="https://github.com/SlimRoms/platform_manifest.git"
                 mainbranch="or8.1"
                 localManifestBranch="android-8.1"
                 treble_generate="slim"
+                extra_make_options="WITHOUT_CHECK_API=true"
+                ;;
+	    havoc)
+                mainrepo="https://github.com/Havoc-OS/android_manifest.git"
+                mainbranch="pie"
+                localManifestBranch="android-9.0"
+                treble_generate="havoc"
                 extra_make_options="WITHOUT_CHECK_API=true"
                 ;;
         esac
@@ -277,6 +309,11 @@ function init_patches() {
         # We don't want to replace from AOSP since we'll be applying
         # patches by hand
         rm -f .repo/local_manifests/replace.xml
+
+        # Remove exfat entry from local_manifest if it exists in ROM manifest 
+        if grep -rqF exfat .repo/manifests || grep -qF exfat .repo/manifest.xml;then
+            sed -i -E '/external\/exfat/d' .repo/local_manifests/manifest.xml
+        fi
 
         # should I do this? will it interfere with building non-gapps images?
         # rm -f .repo/local_manifests/opengapps.xml
