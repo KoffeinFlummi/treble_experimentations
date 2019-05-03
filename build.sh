@@ -10,11 +10,11 @@ if [ -z "$USER" ];then
 fi
 export LC_ALL=C
 
-aosp="android-8.1.0_r48"
+aosp="android-8.1.0_r62"
 phh="android-8.1"
 
 if [ "$1" == "android-9.0" ];then
-    aosp="android-9.0.0_r16"
+    aosp="android-9.0.0_r35"
     phh="android-9.0"
 fi
 
@@ -41,7 +41,7 @@ buildVariant() {
 	make BUILD_NUMBER=$rom_fp installclean
 	make BUILD_NUMBER=$rom_fp -j8 systemimage
 	make BUILD_NUMBER=$rom_fp vndk-test-sepolicy
-	xz -c $OUT/system.img > release/$rom_fp/system-${2}.img.xz
+	xz -c $OUT/system.img -T0 > release/$rom_fp/system-${2}.img.xz
 }
 
 repo manifest -r > release/$rom_fp/manifest.xml
@@ -58,6 +58,13 @@ buildVariant treble_arm64_bfS-userdebug arm64-ab-floss-su
 
 buildVariant treble_arm_avN-userdebug arm-aonly-vanilla-nosu
 [ "$1" != "android-9.0" ] && buildVariant treble_arm_aoS-userdebug arm-aonly-go-su
+buildVariant treble_arm_agS-userdebug arm-aonly-gapps-su
+
+buildVariant treble_a64_avN-userdebug arm32_binder64-aonly-vanilla-nosu
+buildVariant treble_a64_agS-userdebug arm32_binder64-aonly-gapps-su
+
+buildVariant treble_a64_bvN-userdebug arm32_binder64-ab-vanilla-nosu
+buildVariant treble_a64_bgS-userdebug arm32_binder64-ab-gapps-su
 
 if [ "$release" == true ];then
     (

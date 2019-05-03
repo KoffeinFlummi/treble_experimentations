@@ -5,6 +5,7 @@ if [ -z "$USER" ];then
     export USER="$(id -un)"
 fi
 export LC_ALL=C
+export GAPPS_SOURCES_PATH=vendor/opengapps/sources/
 
 ## set defaults
 
@@ -51,6 +52,7 @@ Variants are dash-joined combinations of (in order):
 * processor type
   * "arm" for ARM 32 bit
   * "arm64" for ARM 64 bit
+  * "a64" for ARM 32 bit system with 64 bit binder
 * A or A/B partition layout ("aonly" or "ab")
 * GApps selection
   * "vanilla" to not include GApps
@@ -67,6 +69,7 @@ for example:
 
 * arm-aonly-vanilla-nosu-user
 * arm64-ab-gapps-su
+* a64-aonly-go-nosu
 EOF
 }
 
@@ -82,14 +85,14 @@ function get_rom_type() {
                 ;;
             aosp81)
                 mainrepo="https://android.googlesource.com/platform/manifest.git"
-                mainbranch="android-8.1.0_r30"
+                mainbranch="android-8.1.0_r48"
                 localManifestBranch="android-8.1"
                 treble_generate=""
                 extra_make_options=""
                 ;;
             aosp90)
                 mainrepo="https://android.googlesource.com/platform/manifest.git"
-                mainbranch="android-9.0.0_r1"
+                mainbranch="android-9.0.0_r21"
                 localManifestBranch="android-9.0"
                 treble_generate=""
                 extra_make_options=""
@@ -137,7 +140,7 @@ function get_rom_type() {
                 extra_make_options="WITHOUT_CHECK_API=true"
                 ;;
             pixel90)
-                mainrepo="https://github.com/PixelExperience-P/manifest.git"
+                mainrepo="https://github.com/PixelExperience/manifest.git"
                 mainbranch="pie"
                 localManifestBranch="android-9.0"
                 treble_generate="pixel"
@@ -173,8 +176,8 @@ function get_rom_type() {
                 ;;
             aex)
                 mainrepo="https://github.com/AospExtended/manifest.git"
-                mainbranch="8.1.x"
-                localManifestBranch="android-8.1"
+                mainbranch="9.x"
+                localManifestBranch="android-9.0"
                 treble_generate="aex"
                 extra_make_options="WITHOUT_CHECK_API=true"
                 ;;
@@ -209,10 +212,6 @@ function parse_options() {
     done
 }
 
-declare -A processor_type_map
-processor_type_map[arm]=arm
-processor_type_map[arm64]=arm64
-
 declare -A partition_layout_map
 partition_layout_map[aonly]=a
 partition_layout_map[ab]=b
@@ -236,11 +235,11 @@ function parse_variant() {
     local -a pieces
     IFS=- pieces=( $1 )
 
-    local processor_type=${processor_type_map[${pieces[0]}]}
+    local processor_type=${pieces[0]}
     local partition_layout=${partition_layout_map[${pieces[1]}]}
     local gapps_selection=${gapps_selection_map[${pieces[2]}]}
     local su_selection=${su_selection_map[${pieces[3]}]}
-    local build_type_selection=${build_type_selection_map[${pieces[4]}]}
+    local build_type_selection=${pieces[4]}
 
     if [[ -z "$processor_type" || -z "$partition_layout" || -z "$gapps_selection" || -z "$su_selection" ]]; then
         >&2 echo "Invalid variant '$1'"
@@ -321,7 +320,7 @@ function init_patches() {
 }
 
 function sync_repo() {
-    repo sync -c -j "$jobs" --force-sync
+    repo sync -c -j "$jobs" -f --force-sync --no-tag --no-clone-bundle --optimized-fetch --prune
 }
 
 function patch_things() {
