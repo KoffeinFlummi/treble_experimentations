@@ -1,17 +1,17 @@
-From a680cd5f3889e5f2f54672b1e32b7b9675ff0818 Mon Sep 17 00:00:00 2001
-From: KoffeinFlummi <koffeinflummi@gmail.com>
-Date: Wed, 22 Aug 2018 18:17:02 +0200
-Subject: [PATCH 2/5] Make changes for OTA updates
+From 4cbb588b229eeaac69b7b024c9718135a616c9e1 Mon Sep 17 00:00:00 2001
+From: KoffeinFlummi <koffeinflummi@protonmail.com>
+Date: Sat, 4 May 2019 19:47:24 +0200
+Subject: [PATCH 2/3] Make changes for OTA updates
 
 ---
  phhgsi_arm64_ab/BoardConfig.mk | 4 ++++
  1 file changed, 4 insertions(+)
 
 diff --git a/phhgsi_arm64_ab/BoardConfig.mk b/phhgsi_arm64_ab/BoardConfig.mk
-index 612ff3e..6724674 100644
+index 2b59f0f..ef807de 100644
 --- a/phhgsi_arm64_ab/BoardConfig.mk
 +++ b/phhgsi_arm64_ab/BoardConfig.mk
-@@ -1,4 +1,8 @@
+@@ -1,6 +1,10 @@
  include build/make/target/board/generic_arm64_ab/BoardConfig.mk
  include device/phh/treble/board-base.mk
  
@@ -19,7 +19,9 @@ index 612ff3e..6724674 100644
 +AB_OTA_PARTITIONS := system
 +PRODUCT_PACKAGES += update_engine update_verifier
 +
+ ifeq ($(BOARD_SYSTEMIMAGE_PARTITION_RESERVED_SIZE),)
  BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2147483648
+ endif
 -- 
-2.19.0
+2.21.0
 

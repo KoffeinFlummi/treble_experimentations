@@ -1,22 +1,23 @@
-From 89d81a2caf3e022ed69ff3d52b0f8e1ce05f376c Mon Sep 17 00:00:00 2001
-From: KoffeinFlummi <koffeinflummi@gmail.com>
-Date: Mon, 3 Sep 2018 02:37:45 +0200
+From 027f6686c73392e6927582f2b4a307dfe64955aa Mon Sep 17 00:00:00 2001
+From: KoffeinFlummi <koffeinflummi@protonmail.com>
+Date: Tue, 7 May 2019 21:57:29 +0200
 Subject: [PATCH 2/2] Disable Adaptive Icon wrapping
 
-Change-Id: Ia4e15d007eb9c645e5f09e7cf6d5df018e3f9f11
+Change-Id: Id7699604836f4eaa4e5ba7a87280cd70083f3f18
 ---
- .../launcher3/graphics/LauncherIcons.java     | 23 ++-----------------
- 1 file changed, 2 insertions(+), 21 deletions(-)
+ .../launcher3/graphics/LauncherIcons.java     | 24 ++-----------------
+ 1 file changed, 2 insertions(+), 22 deletions(-)
 
 diff --git a/src/com/android/launcher3/graphics/LauncherIcons.java b/src/com/android/launcher3/graphics/LauncherIcons.java
-index 89ba72abf..5233680f0 100644
+index 333fe5907..88a94c028 100644
 --- a/src/com/android/launcher3/graphics/LauncherIcons.java
 +++ b/src/com/android/launcher3/graphics/LauncherIcons.java
-@@ -241,27 +241,8 @@ public class LauncherIcons implements AutoCloseable {
+@@ -248,28 +248,8 @@ public class LauncherIcons implements AutoCloseable {
      private Drawable normalizeAndWrapToAdaptiveIcon(Drawable icon, int iconAppTargetSdk,
              RectF outIconBounds, float[] outScale) {
          float scale = 1f;
--        if (Utilities.ATLEAST_OREO && iconAppTargetSdk >= Build.VERSION_CODES.O) {
+-        if ((Utilities.ATLEAST_OREO && iconAppTargetSdk >= Build.VERSION_CODES.O) ||
+-                Utilities.ATLEAST_P) {
 -            boolean[] outShape = new boolean[1];
 -            if (mWrapperIcon == null) {
 -                mWrapperIcon = mContext.getDrawable(R.drawable.adaptive_icon_drawable_wrapper)
@@ -43,5 +44,5 @@ index 89ba72abf..5233680f0 100644
          outScale[0] = scale;
          return icon;
 -- 
-2.18.0
+2.21.0
 

@@ -1,0 +1,358 @@
+From 1dfdd2a680ef66507d3415f009708b6d6ab5aeb0 Mon Sep 17 00:00:00 2001
+From: KoffeinFlummi <koffeinflummi@protonmail.com>
+Date: Tue, 7 May 2019 21:30:29 +0200
+Subject: [PATCH 3/3] Disable sepolicies that prevent user builds
+
+---
+ base.mk                 |   2 +-
+ sepolicy/hostapd.te     |   4 +-
+ sepolicy/huawei.te      |   2 +-
+ sepolicy/qualcomm.te    |  42 ++++----
+ sepolicy/su.te          | 226 ++++++++++++++++++++--------------------
+ sepolicy/treble_app.te  |   8 +-
+ sepolicy/vndk_detect.te |   4 +-
+ 7 files changed, 144 insertions(+), 144 deletions(-)
+
+diff --git a/base.mk b/base.mk
+index 22851e0..524c0c7 100644
+--- a/base.mk
++++ b/base.mk
+@@ -107,7 +107,7 @@ PRODUCT_COPY_FILES += \
+ 	device/phh/treble/files/samsung-9810-floating_feature.xml:system/ph/sam-9810-flo_feat.xml \
+ 	device/phh/treble/files/mimix3-gpio-keys.kl:system/phh/mimix3-gpio-keys.kl
+ 
+-SELINUX_IGNORE_NEVERALLOWS := true
++#SELINUX_IGNORE_NEVERALLOWS := true
+ 
+ # Universal NoCutoutOverlay
+ PRODUCT_PACKAGES += \
+diff --git a/sepolicy/hostapd.te b/sepolicy/hostapd.te
+index fd37b61..5eee2c2 100644
+--- a/sepolicy/hostapd.te
++++ b/sepolicy/hostapd.te
+@@ -1,4 +1,4 @@
+ type hostapd, domain;
+ 
+-allow hostapd wifi_data_file:dir create_dir_perms;
+-allow hostapd wifi_data_file:file create_file_perms;
++#allow hostapd wifi_data_file:dir create_dir_perms;
++#allow hostapd wifi_data_file:file create_file_perms;
+diff --git a/sepolicy/huawei.te b/sepolicy/huawei.te
+index 4c1887f..ece50e4 100644
+--- a/sepolicy/huawei.te
++++ b/sepolicy/huawei.te
+@@ -1 +1 @@
+-allow ueventd proc:file r_file_perms;
++#allow ueventd proc:file r_file_perms;
+diff --git a/sepolicy/qualcomm.te b/sepolicy/qualcomm.te
+index dcdf462..f0b0bda 100644
+--- a/sepolicy/qualcomm.te
++++ b/sepolicy/qualcomm.te
+@@ -1,21 +1,21 @@
+-type rild, domain;
+-
+-#me.phh.treble.qti.audio is system-signed
+-allow system_app hal_telephony_hwservice:hwservice_manager { find };
+-allow { rild system_app } { rild system_app }:binder { call transfer };
+-
+-#Pixel 1
+-type vnd_qcril_audio_hwservice, hwservice_manager_type;
+-allow system_app vnd_qcril_audio_hwservice:hwservice_manager { find };
+-
+-#Pixel 2
+-type vnd_qcrilhook_hwservice, hwservice_manager_type;
+-allow system_app vnd_qcrilhook_hwservice:hwservice_manager { find };
+-
+-#OP6
+-allow system_app hal_telephony_hwservice:hwservice_manager { find };
+-
+-# cf https://github.com/phhusson/treble_experimentations/issues/131
+-# SELinux : avc:  denied  { add } for interface=android.hardware.tetheroffload.control::IOffloadControl pid=15220 scontext=u:r:ipacm:s0 tcontext=u:object_r:hal_tetheroffload_hwservice:s0 tclass=hwservice_manager permissive=0
+-type ipacm, hwservice_manager_type;
+-allow ipacm hal_tetheroffload_hwservice:hwservice_manager { add };
++#type rild, domain;
++#
++##me.phh.treble.qti.audio is system-signed
++#allow system_app hal_telephony_hwservice:hwservice_manager { find };
++#allow { rild system_app } { rild system_app }:binder { call transfer };
++#
++##Pixel 1
++#type vnd_qcril_audio_hwservice, hwservice_manager_type;
++#allow system_app vnd_qcril_audio_hwservice:hwservice_manager { find };
++#
++##Pixel 2
++#type vnd_qcrilhook_hwservice, hwservice_manager_type;
++#allow system_app vnd_qcrilhook_hwservice:hwservice_manager { find };
++#
++##OP6
++#allow system_app hal_telephony_hwservice:hwservice_manager { find };
++#
++## cf https://github.com/phhusson/treble_experimentations/issues/131
++## SELinux : avc:  denied  { add } for interface=android.hardware.tetheroffload.control::IOffloadControl pid=15220 scontext=u:r:ipacm:s0 tcontext=u:object_r:hal_tetheroffload_hwservice:s0 tclass=hwservice_manager permissive=0
++#type ipacm, hwservice_manager_type;
++#allow ipacm hal_tetheroffload_hwservice:hwservice_manager { add };
+diff --git a/sepolicy/su.te b/sepolicy/su.te
+index a1b1c01..3e41dde 100644
+--- a/sepolicy/su.te
++++ b/sepolicy/su.te
+@@ -8,116 +8,116 @@ tmpfs_domain(phhsu_daemon);
+ domain_auto_trans(init, phhsu_exec, phhsu_daemon);
+ file_type_auto_trans(phhsu_daemon, device, phhsu_daemon);
+ 
+-allow { appdomain shell } phhsu_daemon:unix_stream_socket { connectto write read };
+-allow { appdomain shell } phhsu_daemon:sock_file { write read };
+-allow { appdomain shell } phhsu_exec:file { getattr read open execute execute_no_trans };
+-
+-create_pty(shell)
+-allowxperm shell devpts:chr_file ioctl { TCSETSF TCGETS unpriv_tty_ioctls };
+-allowxperm { phhsu_daemon untrusted_app untrusted_app_27 } untrusted_app_all_devpts:chr_file ioctl { TCSETSF TCGETS unpriv_tty_ioctls };
+-
+-allow servicemanager phhsu_daemon:dir { search read };
+-allow servicemanager phhsu_daemon:file { open read };
+-allow servicemanager phhsu_daemon:process { getattr };
+-allow servicemanager phhsu_daemon:binder { call transfer };
+-
+-typeattribute phhsu_daemon mlstrustedobject;
+-typeattribute phhsu_daemon mlstrustedsubject;
+-
+-allow shell su_exec:file getattr;
+-typeattribute su mlstrustedsubject;
+-
+-allow phhsu_daemon { system_api_service app_api_service system_server_service }:service_manager find;
+-
+-allow system_server phhsu_daemon:fifo_file { read write };
+-allow system_server phhsu_daemon:fd use;
+-allow system_server phhsu_daemon:binder { call transfer };
+-allow system_server shell_devpts:chr_file { read write };
+-
+-# Add su to various domains
+-net_domain(phhsu_daemon)
+-
+-hwbinder_use(phhsu_daemon)
+-
+-allow phhsu_daemon untrusted_app_all_devpts:chr_file { getattr read write open ioctl };
+-allow phhsu_daemon zygote_exec:file { execute read open execute_no_trans getattr };
+-
+-allow appdomain phhsu_daemon:dir { search };
+-
+-allow phhsu_daemon self:global_capability_class_set { sys_resource sys_ptrace };
+-
+-allow phhsu_daemon self:dir rw_dir_perms;
+-allow phhsu_daemon self:file { rwx_file_perms create rename setattr unlink };
+-allow phhsu_daemon self:lnk_file { r_file_perms execmod };
+-
+-allow phhsu_daemon adbd_exec:file { getattr read };
+-allow phhsu_daemon { rootfs same_process_hal_file system_file }:file { mounton getattr };
+-allow phhsu_daemon self:capability { sys_admin chown setuid setgid net_raw dac_override dac_read_search kill };
+-allow phhsu_daemon self:capability2 { syslog };
+-allow phhsu_daemon shell_exec:file rx_file_perms;
+-allow phhsu_daemon system_file:file { rx_file_perms entrypoint };
+-allow phhsu_daemon kmsg_device:chr_file { ioctl w_file_perms };
+-allow phhsu_daemon toolbox_exec:file rx_file_perms;
+-allow phhsu_daemon system_block_device:{ lnk_file file } r_file_perms;
+-
+-allow { phhsu_daemon shell } domain:dir rw_dir_perms;
+-allow { phhsu_daemon shell } domain:file rw_file_perms;
+-allow { phhsu_daemon shell } domain:lnk_file rw_file_perms;
+-allow { phhsu_daemon shell } rootfs:file { rwx_file_perms create rename setattr unlink };
+-allow { phhsu_daemon shell } rootfs:dir rw_dir_perms;
+-allow phhsu_daemon asec_apk_file:dir rw_dir_perms;
+-
+-allow phhsu_daemon shell_devpts:chr_file rw_file_perms;
+-
+-allow phhsu_daemon app_data_file:dir rw_dir_perms;
+-allow phhsu_daemon app_data_file:file { rwx_file_perms create rename setattr unlink };
+-allow phhsu_daemon dalvikcache_data_file:dir rw_dir_perms;
+-allow phhsu_daemon dalvikcache_data_file:file { rwx_file_perms create rename setattr unlink };
+-allow phhsu_daemon dalvikcache_data_file:lnk_file { r_file_perms execmod };
+-allow phhsu_daemon system_data_file:file { rwx_file_perms create rename setattr unlink };
+-allow phhsu_daemon system_data_file:dir rw_dir_perms;
+-allow phhsu_daemon system_data_file:file { rwx_file_perms create rename setattr unlink };
+-allow phhsu_daemon system_file:dir rw_dir_perms;
+-allow phhsu_daemon system_file:file { rwx_file_perms create rename setattr unlink };
+-allow phhsu_daemon init:unix_stream_socket { connectto };
+-allow phhsu_daemon self:process { ptrace setexec execmem setfscreate };
+-allow phhsu_daemon app_data_file:file { rwx_file_perms create rename setattr unlink };
+-allow phhsu_daemon app_data_file:dir rw_dir_perms;
+-allow phhsu_daemon ashmem_device:chr_file { execute };
+-allow phhsu_daemon dex2oat_exec:file rx_file_perms;
+-
+-
+-allow phhsu_daemon phhsu_daemon_tmpfs:file rwx_file_perms;
+-
+-allow phhsu_daemon { proc_type dev_type exec_type file_type sysfs_type fs_type }:file { rwx_file_perms create };
+-allow phhsu_daemon { proc_type dev_type exec_type file_type sysfs_type fs_type }:dir rw_dir_perms;
+-allow phhsu_daemon { proc_type dev_type exec_type file_type sysfs_type fs_type }:chr_file rwx_file_perms;
+-allow phhsu_daemon { proc_type dev_type exec_type file_type sysfs_type fs_type }:blk_file rw_file_perms;
+-
+-allow phhsu_daemon device:file rwx_file_perms;
+-allow phhsu_daemon device:dir rw_dir_perms;
+-
+-allow phhsu_daemon domain:process { ptrace signal signull getattr };
+-allow phhsu_daemon selinuxfs:file rwx_file_perms;
+-allow domain phhsu_daemon:process { sigchld };
+-allow phhsu_daemon domain:binder { call transfer };
+-allow phhsu_daemon kernel:system { syslog_read syslog_mod };
+-allow phhsu_daemon kernel:security { setenforce };
+-allow phhsu_daemon domain:unix_stream_socket { getattr };
+-
+-allow phhsu_daemon logdr_socket:sock_file write;
+-allow phhsu_daemon logd:unix_stream_socket connectto;
+-
+-allow phhsu_daemon property_type:property_service { set };
+-allow phhsu_daemon property_socket:sock_file { write };
+-allow phhsu_daemon property_type:file rw_file_perms;
+-allow phhsu_daemon { hwservicemanager hwservice_manager_type }:hwservice_manager { list add find };
+-allow phhsu_daemon domain:unix_dgram_socket rw_socket_perms;
+-
+-allow phhsu_daemon tombstoned_intercept_socket:sock_file { write };
+-allow phhsu_daemon tombstoned:unix_stream_socket { connectto };
+-
+-allow phhsu_daemon { property_data_file data_file_type tmpfs }:file create_file_perms;
+-allow phhsu_daemon { property_data_file data_file_type tmpfs }:dir create_dir_perms;
+-
+-allow phhsu_daemon fs_type:filesystem { remount remount unmount associate};
++#allow { appdomain shell } phhsu_daemon:unix_stream_socket { connectto write read };
++#allow { appdomain shell } phhsu_daemon:sock_file { write read };
++#allow { appdomain shell } phhsu_exec:file { getattr read open execute execute_no_trans };
++#
++#create_pty(shell)
++#allowxperm shell devpts:chr_file ioctl { TCSETSF TCGETS unpriv_tty_ioctls };
++#allowxperm { phhsu_daemon untrusted_app untrusted_app_27 } untrusted_app_all_devpts:chr_file ioctl { TCSETSF TCGETS unpriv_tty_ioctls };
++#
++#allow servicemanager phhsu_daemon:dir { search read };
++#allow servicemanager phhsu_daemon:file { open read };
++#allow servicemanager phhsu_daemon:process { getattr };
++#allow servicemanager phhsu_daemon:binder { call transfer };
++#
++#typeattribute phhsu_daemon mlstrustedobject;
++#typeattribute phhsu_daemon mlstrustedsubject;
++#
++#allow shell su_exec:file getattr;
++#typeattribute su mlstrustedsubject;
++#
++#allow phhsu_daemon { system_api_service app_api_service system_server_service }:service_manager find;
++#
++#allow system_server phhsu_daemon:fifo_file { read write };
++#allow system_server phhsu_daemon:fd use;
++#allow system_server phhsu_daemon:binder { call transfer };
++#allow system_server shell_devpts:chr_file { read write };
++#
++## Add su to various domains
++#net_domain(phhsu_daemon)
++#
++#hwbinder_use(phhsu_daemon)
++#
++#allow phhsu_daemon untrusted_app_all_devpts:chr_file { getattr read write open ioctl };
++#allow phhsu_daemon zygote_exec:file { execute read open execute_no_trans getattr };
++#
++#allow appdomain phhsu_daemon:dir { search };
++#
++#allow phhsu_daemon self:global_capability_class_set { sys_resource sys_ptrace };
++#
++#allow phhsu_daemon self:dir rw_dir_perms;
++#allow phhsu_daemon self:file { rwx_file_perms create rename setattr unlink };
++#allow phhsu_daemon self:lnk_file { r_file_perms execmod };
++#
++#allow phhsu_daemon adbd_exec:file { getattr read };
++#allow phhsu_daemon { rootfs same_process_hal_file system_file }:file { mounton getattr };
++#allow phhsu_daemon self:capability { sys_admin chown setuid setgid net_raw dac_override dac_read_search kill };
++#allow phhsu_daemon self:capability2 { syslog };
++#allow phhsu_daemon shell_exec:file rx_file_perms;
++#allow phhsu_daemon system_file:file { rx_file_perms entrypoint };
++#allow phhsu_daemon kmsg_device:chr_file { ioctl w_file_perms };
++#allow phhsu_daemon toolbox_exec:file rx_file_perms;
++#allow phhsu_daemon system_block_device:{ lnk_file file } r_file_perms;
++#
++#allow { phhsu_daemon shell } domain:dir rw_dir_perms;
++#allow { phhsu_daemon shell } domain:file rw_file_perms;
++#allow { phhsu_daemon shell } domain:lnk_file rw_file_perms;
++#allow { phhsu_daemon shell } rootfs:file { rwx_file_perms create rename setattr unlink };
++#allow { phhsu_daemon shell } rootfs:dir rw_dir_perms;
++#allow phhsu_daemon asec_apk_file:dir rw_dir_perms;
++#
++#allow phhsu_daemon shell_devpts:chr_file rw_file_perms;
++#
++#allow phhsu_daemon app_data_file:dir rw_dir_perms;
++#allow phhsu_daemon app_data_file:file { rwx_file_perms create rename setattr unlink };
++#allow phhsu_daemon dalvikcache_data_file:dir rw_dir_perms;
++#allow phhsu_daemon dalvikcache_data_file:file { rwx_file_perms create rename setattr unlink };
++#allow phhsu_daemon dalvikcache_data_file:lnk_file { r_file_perms execmod };
++#allow phhsu_daemon system_data_file:file { rwx_file_perms create rename setattr unlink };
++#allow phhsu_daemon system_data_file:dir rw_dir_perms;
++#allow phhsu_daemon system_data_file:file { rwx_file_perms create rename setattr unlink };
++#allow phhsu_daemon system_file:dir rw_dir_perms;
++#allow phhsu_daemon system_file:file { rwx_file_perms create rename setattr unlink };
++#allow phhsu_daemon init:unix_stream_socket { connectto };
++#allow phhsu_daemon self:process { ptrace setexec execmem setfscreate };
++#allow phhsu_daemon app_data_file:file { rwx_file_perms create rename setattr unlink };
++#allow phhsu_daemon app_data_file:dir rw_dir_perms;
++#allow phhsu_daemon ashmem_device:chr_file { execute };
++#allow phhsu_daemon dex2oat_exec:file rx_file_perms;
++#
++#
++#allow phhsu_daemon phhsu_daemon_tmpfs:file rwx_file_perms;
++#
++#allow phhsu_daemon { proc_type dev_type exec_type file_type sysfs_type fs_type }:file { rwx_file_perms create };
++#allow phhsu_daemon { proc_type dev_type exec_type file_type sysfs_type fs_type }:dir rw_dir_perms;
++#allow phhsu_daemon { proc_type dev_type exec_type file_type sysfs_type fs_type }:chr_file rwx_file_perms;
++#allow phhsu_daemon { proc_type dev_type exec_type file_type sysfs_type fs_type }:blk_file rw_file_perms;
++#
++#allow phhsu_daemon device:file rwx_file_perms;
++#allow phhsu_daemon device:dir rw_dir_perms;
++#
++#allow phhsu_daemon domain:process { ptrace signal signull getattr };
++#allow phhsu_daemon selinuxfs:file rwx_file_perms;
++#allow domain phhsu_daemon:process { sigchld };
++#allow phhsu_daemon domain:binder { call transfer };
++#allow phhsu_daemon kernel:system { syslog_read syslog_mod };
++#allow phhsu_daemon kernel:security { setenforce };
++#allow phhsu_daemon domain:unix_stream_socket { getattr };
++#
++#allow phhsu_daemon logdr_socket:sock_file write;
++#allow phhsu_daemon logd:unix_stream_socket connectto;
++#
++#allow phhsu_daemon property_type:property_service { set };
++#allow phhsu_daemon property_socket:sock_file { write };
++#allow phhsu_daemon property_type:file rw_file_perms;
++#allow phhsu_daemon { hwservicemanager hwservice_manager_type }:hwservice_manager { list add find };
++#allow phhsu_daemon domain:unix_dgram_socket rw_socket_perms;
++#
++#allow phhsu_daemon tombstoned_intercept_socket:sock_file { write };
++#allow phhsu_daemon tombstoned:unix_stream_socket { connectto };
++#
++#allow phhsu_daemon { property_data_file data_file_type tmpfs }:file create_file_perms;
++#allow phhsu_daemon { property_data_file data_file_type tmpfs }:dir create_dir_perms;
++#
++#allow phhsu_daemon fs_type:filesystem { remount remount unmount associate};
+diff --git a/sepolicy/treble_app.te b/sepolicy/treble_app.te
+index ca174b4..8e9a457 100644
+--- a/sepolicy/treble_app.te
++++ b/sepolicy/treble_app.te
+@@ -1,7 +1,7 @@
+-allow system_app hal_wifi_hostapd_hwservice:hwservice_manager { add find };
+-allow system_app hidl_base_hwservice:hwservice_manager { add };
+-allow system_app wifi_data_file:dir create_dir_perms;
+-allow system_app wifi_data_file:file create_file_perms;
++#allow system_app hal_wifi_hostapd_hwservice:hwservice_manager { add find };
++#allow system_app hidl_base_hwservice:hwservice_manager { add };
++#allow system_app wifi_data_file:dir create_dir_perms;
++#allow system_app wifi_data_file:file create_file_perms;
+ 
+ type vendor_camera_prop, property_type;
+ set_prop(system_app, vendor_camera_prop);
+diff --git a/sepolicy/vndk_detect.te b/sepolicy/vndk_detect.te
+index df25be3..3deaf25 100644
+--- a/sepolicy/vndk_detect.te
++++ b/sepolicy/vndk_detect.te
+@@ -20,5 +20,5 @@ allow vndk_detect self:capability { sys_admin };
+ allow init vendor_configs_file:file { getattr mounton };
+ 
+ #/sys/module/five
+-allow vndk_detect sysfs:file r_file_perms;
+-allow vndk_detect sysfs:dir r_dir_perms;
++#allow vndk_detect sysfs:file r_file_perms;
++#allow vndk_detect sysfs:dir r_dir_perms;
+-- 
+2.21.0
+

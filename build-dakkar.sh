@@ -92,7 +92,7 @@ function get_rom_type() {
                 ;;
             aosp90)
                 mainrepo="https://android.googlesource.com/platform/manifest.git"
-                mainbranch="android-9.0.0_r21"
+                mainbranch="android-9.0.0_r36"
                 localManifestBranch="android-9.0"
                 treble_generate=""
                 extra_make_options=""
@@ -342,11 +342,15 @@ function patch_things() {
         cp -r "$(dirname "$0")/custom_patches" patches
         bash "$(dirname "$0")/apply-patches.sh" .
 
+        echo "Generating device files..."
+
         (
             cd device/phh/treble
             git clean -fdx
             bash generate.sh
         )
+
+        echo "Updating vendor files..."
 
         (
             cd vendor/foss
