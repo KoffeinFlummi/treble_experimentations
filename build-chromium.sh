@@ -4,10 +4,11 @@
 
 set -e
 
-VERSION="70.0.3532.0"
+VERSION="74.0.3729.136"
 
 if [ $(df | egrep "/$" | awk '{print $4}') -lt 104857600 ]; then
     echo "!!! Hard drive probably too small (< 100GiB) !!!"
+    echo "!!! (ignore if chromium already cloned)      !!!"
 fi
 
 sudo apt update
@@ -18,14 +19,17 @@ if [ ! -d depot_tools ]; then
 fi
 export PATH="$PATH:${HOME}/depot_tools"
 
-mkdir -p ~/chromium && cd ~/chromium
-if [ ! -f .glient ]; then
+if [ ! -d chromium ]; then
+    mkdir chromium
+    cd chromium
     fetch --nohooks android
+else
+    cd chromium
 fi
 
 ./src/build/install-build-deps-android.sh
 
-gclient sync --with_branch_heads -r $VERSION
+gclient sync -D --with_branch_heads -r $VERSION
 
 # Apply the Copperhead patches
 rm -rf chromium_patches
