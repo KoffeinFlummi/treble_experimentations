@@ -26,6 +26,7 @@ for project in $(cd $patches/patches; echo *);do
 			git am --continue
 		else
 			echo "Failed applying $patch"
+                        exit 1
 		fi
 	done
 	popd
