@@ -1,7 +1,7 @@
-From 4cbb588b229eeaac69b7b024c9718135a616c9e1 Mon Sep 17 00:00:00 2001
+From f78eb7df89df76d085e2df1b58090bddcffe6b50 Mon Sep 17 00:00:00 2001
 From: KoffeinFlummi <koffeinflummi@protonmail.com>
 Date: Sat, 4 May 2019 19:47:24 +0200
-Subject: [PATCH 2/3] Make changes for OTA updates
+Subject: [PATCH 2/4] Make changes for OTA updates
 
 ---
  phhgsi_arm64_ab/BoardConfig.mk | 4 ++++
@@ -23,5 +23,5 @@ index 2b59f0f..ef807de 100644
  BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2147483648
  endif
 -- 
-2.21.0
+2.22.0
 

@@ -1,0 +1,42 @@
+From 61cd0593adcbfa2bd546b644f7212cd56fbdc04d Mon Sep 17 00:00:00 2001
+From: KoffeinFlummi <koffeinflummi@protonmail.com>
+Date: Thu, 20 Jun 2019 19:34:26 +0200
+Subject: [PATCH 4/4] Fix call audio SELinux issue
+
+---
+ sepolicy/qualcomm.te | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/sepolicy/qualcomm.te b/sepolicy/qualcomm.te
+index f0b0bda..4359085 100644
+--- a/sepolicy/qualcomm.te
++++ b/sepolicy/qualcomm.te
+@@ -1,9 +1,13 @@
++
++type rild, domain;
+ #type rild, domain;
+-#
+-##me.phh.treble.qti.audio is system-signed
+-#allow system_app hal_telephony_hwservice:hwservice_manager { find };
+-#allow { rild system_app } { rild system_app }:binder { call transfer };
+-#
++hal_server_domain(rild, hal_telephony)
++net_domain(rild)
++
++#me.phh.treble.qti.audio is system-signed
++allow system_app hal_telephony_hwservice:hwservice_manager { find };
++allow { rild system_app } { rild system_app }:binder { call transfer };
++
+ ##Pixel 1
+ #type vnd_qcril_audio_hwservice, hwservice_manager_type;
+ #allow system_app vnd_qcril_audio_hwservice:hwservice_manager { find };
+@@ -19,3 +23,6 @@
+ ## SELinux : avc:  denied  { add } for interface=android.hardware.tetheroffload.control::IOffloadControl pid=15220 scontext=u:r:ipacm:s0 tcontext=u:object_r:hal_tetheroffload_hwservice:s0 tclass=hwservice_manager permissive=0
+ #type ipacm, hwservice_manager_type;
+ #allow ipacm hal_tetheroffload_hwservice:hwservice_manager { add };
++
++type rild_exec, exec_type, vendor_file_type, file_type;
++init_daemon_domain(rild)
+-- 
+2.22.0
+

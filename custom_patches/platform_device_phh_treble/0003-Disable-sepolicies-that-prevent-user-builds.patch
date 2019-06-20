@@ -1,7 +1,7 @@
-From 1dfdd2a680ef66507d3415f009708b6d6ab5aeb0 Mon Sep 17 00:00:00 2001
+From ebacf9294a716abda88d7f3006989e64bc4b9f28 Mon Sep 17 00:00:00 2001
 From: KoffeinFlummi <koffeinflummi@protonmail.com>
 Date: Tue, 7 May 2019 21:30:29 +0200
-Subject: [PATCH 3/3] Disable sepolicies that prevent user builds
+Subject: [PATCH 3/4] Disable sepolicies that prevent user builds
 
 ---
  base.mk                 |   2 +-
@@ -14,7 +14,7 @@ Subject: [PATCH 3/3] Disable sepolicies that prevent user builds
  7 files changed, 144 insertions(+), 144 deletions(-)
 
 diff --git a/base.mk b/base.mk
-index 22851e0..524c0c7 100644
+index 45d215a..b9c8b88 100644
 --- a/base.mk
 +++ b/base.mk
 @@ -107,7 +107,7 @@ PRODUCT_COPY_FILES += \
@@ -354,5 +354,5 @@ index df25be3..3deaf25 100644
 +#allow vndk_detect sysfs:file r_file_perms;
 +#allow vndk_detect sysfs:dir r_dir_perms;
 -- 
-2.21.0
+2.22.0
 

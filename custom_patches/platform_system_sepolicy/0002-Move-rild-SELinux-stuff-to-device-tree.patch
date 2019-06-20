@@ -1,0 +1,31 @@
+From 3804a7e6c4871e47314d108a6229217f536b8e01 Mon Sep 17 00:00:00 2001
+From: KoffeinFlummi <koffeinflummi@protonmail.com>
+Date: Thu, 20 Jun 2019 19:33:00 +0200
+Subject: [PATCH 2/2] Move rild SELinux stuff to device tree
+
+---
+ vendor/rild.te | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/vendor/rild.te b/vendor/rild.te
+index fc84ef706..10d2bd0f0 100644
+--- a/vendor/rild.te
++++ b/vendor/rild.te
+@@ -1,9 +1,9 @@
+ # rild - radio interface layer daemon
+-type rild, domain;
+-hal_server_domain(rild, hal_telephony)
+-net_domain(rild)
++#type rild, domain;
++#hal_server_domain(rild, hal_telephony)
++#net_domain(rild)
+ 
+ # type_transition must be private policy the domain_trans rules could stay
+ # public, but conceptually should go with this
+-type rild_exec, exec_type, vendor_file_type, file_type;
+-init_daemon_domain(rild)
++#type rild_exec, exec_type, vendor_file_type, file_type;
++#init_daemon_domain(rild)
+-- 
+2.22.0
+

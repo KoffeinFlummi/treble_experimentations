@@ -1,7 +1,7 @@
-From a312fb80b9b10049c75a8c251a785fd69031c74d Mon Sep 17 00:00:00 2001
+From acbd3704a3f36c9b745d085036473c5ad06f6cbe Mon Sep 17 00:00:00 2001
 From: KoffeinFlummi <koffeinflummi@gmail.com>
 Date: Sat, 28 Jul 2018 13:22:52 +0200
-Subject: [PATCH] Disable permissive domain check for user builds
+Subject: [PATCH 1/2] Disable permissive domain check for user builds
 
 ---
  Android.mk | 14 +++++++-------
@@ -33,5 +33,5 @@ index f0c6a6464..24456afb4 100644
  
  built_sepolicy := $(LOCAL_BUILT_MODULE)
 -- 
-2.18.0
+2.22.0
 
